@@ -2,8 +2,9 @@
 <resources>
     <style name="Theme.MySplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground" type="color">@color/primary_500</item>
-        <item name="windowSplashScreenAnimatedIcon" type="drawable">@drawable/logo_zazil</item>
+        <item name="windowSplashScreenAnimatedIcon" type="drawable">@drawable/logo_zazil_prueba</item>
         <item name="postSplashScreenTheme" type="style">@style/Theme.SplashScreen</item>
-    </style>>
+    </style>
+
     <style name="Theme.Zazil_Project_Ecommerce" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

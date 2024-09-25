@@ -7,4 +7,48 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    //Colores de la app
+    //Main colors
+    <color name="primary_700">#9d1f56</color>
+    <color name="primary_500">#D22973</color>
+    <color name="primary_400">#da4184</color>
+    <color name="primary_200">#e578a7</color>
+    <color name="primary_100">#ea93b9</color>
+
+    //Secondary colors
+    <color name="secondary_700">#2d5185</color>
+    <color name="secondary_500">#5885C6</color>
+    <color name="secondary_400">#6d94cd</color>
+    <color name="secondary_200">#97b3db</color>
+    <color name="secondary_100">#acc2e3</color>
+
+    //Neutral colors
+    <color name="neutral_700">#7e7e7e</color>
+    <color name="neutral_500">#A8A8A8</color>
+    <color name="neutral_400">#b3b3b3</color>
+    <color name="neutral_200">#c9c9c9</color>
+    <color name="neutral_100">#d3d3d3</color>
+
+    //Success colors
+    <color name="success_700">#1f871d</color>
+    <color name="success_500">#37D334</color>
+    <color name="success_400">#50d94d</color>
+    <color name="success_200">#82e380</color>
+    <color name="success_100">#9be99a</color>
+
+    //Warning colors
+    <color name="warning_600">#d69c04</color>
+    <color name="warning_500">#F5B205</color>
+    <color name="warning_400">#fabd20</color>
+    <color name="warning_200">#fcd060</color>
+    <color name="warning_100">#fcda80</color>
+
+    //Error colors
+    <color name="error_700">#9d1f1f</color>
+    <color name="error_500">#EC1313</color>
+    <color name="error_400">#da4141</color>
+    <color name="error_200">#e57878</color>
+    <color name="error_100">#ea9393</color>
+
 </resources>

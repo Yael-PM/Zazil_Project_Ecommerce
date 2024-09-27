@@ -52,6 +52,14 @@ android {
 dependencies {
     //Dependencia SplashScreen
     implementation(libs.androidx.core.splashscreen)
+    //Retrofit para consultar información de la API
+    implementation(libs.retrofit)
+    //Covierte JSON en GSON
+    implementation(libs.gson)
+    //Navegación
+    implementation(libs.androidx.navigation.compose)
+    //Librería coil para descargar imagenes de la API
+    implementation(libs.coil)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

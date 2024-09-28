@@ -1,0 +1,32 @@
+Index: app/src/main/java/com/ypm/zazil_project_ecommerce/model/ControladorServicioAPI.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ypm.zazil_project_ecommerce.model\r\n\r\nclass ControladorServicioAPI {\r\n\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/ypm/zazil_project_ecommerce/model/ControladorServicioAPI.kt b/app/src/main/java/com/ypm/zazil_project_ecommerce/model/ControladorServicioAPI.kt
+--- a/app/src/main/java/com/ypm/zazil_project_ecommerce/model/ControladorServicioAPI.kt	
++++ b/app/src/main/java/com/ypm/zazil_project_ecommerce/model/ControladorServicioAPI.kt	
+@@ -1,5 +1,22 @@
+ package com.ypm.zazil_project_ecommerce.model
+ 
++import retrofit2.Retrofit
++import retrofit2.converter.gson.GsonConverterFactory
++
+ class ControladorServicioAPI {
+ 
++    // Configuración de Retrofit
++    private val retrofitProductos by lazy {
++        Retrofit.Builder()
++            // URL base de la API
++            .baseUrl("https://real-time-amazon-data.p.rapidapi.com/search?query=Phone&page=1&country=US&sort_by=RELEVANCE&product_condition=ALL&is_prime=false&deals_and_discounts=NONE")
++            .addConverterFactory(GsonConverterFactory.create())
++            .build()
++    }
++
++    // Servicio a partir de la interfaz PaisesAPI
++    private val servicio by lazy {
++        retrofitProductos.create(PaisesAPI::class.java)
++    }
++
+ }
+\ No newline at end of file

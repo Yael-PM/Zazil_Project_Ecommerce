@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,12 +39,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 
+data class ForoPregunta(
+    val userName: String,
+    val userImage: String,
+    val question: String
+)
 
 @Composable
 fun ForoScreen() {
     var showDialog by remember { mutableStateOf(false) }
     var pregunta by remember { mutableStateOf("") }
     var showAnswer by remember { mutableStateOf(false) }
+    var searchText by remember { mutableStateOf("") }
+
+    // Lista de preguntas iniciales
+    val preguntas = remember {
+        mutableStateListOf(
+            ForoPregunta("Ximena Méndez Vázquez", "file:///android_res/drawable/usuario.png", "Quisiera saber cómo regresar al inicio."),
+        )
+    }
+
+    // Filtrar preguntas basado en el texto de búsqueda
+    val preguntasFiltradas = preguntas.filter {
+        it.question.contains(searchText, ignoreCase = true) || it.userName.contains(searchText, ignoreCase = true)
+    }
 
     Column(
         modifier = Modifier
@@ -90,21 +109,62 @@ fun ForoScreen() {
             text = "Foro",
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(14.dp),
         )
 
-        // Tarjeta de la pregunta
-        ForoPost(
-            userName = "Ximena Méndez Vázquez",
-            userImage = "file:///android_res/drawable/usuario.png",
-            question = "Quisiera saber cómo regresar al inicio.",
-            backgroundColor = Color(0xFF5885C6), // Azul
-            isQuestion = true,
-            showAnswer = showAnswer,
-            onShowAnswerToggle = { showAnswer = !showAnswer }
-        )
+        Spacer(modifier = Modifier.height(2.dp))
+        // Campo de búsqueda con la imagen de lupa
+        Box(
+            modifier = Modifier
+                .height(40.dp)
+                .width(360.dp)
+                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                .padding(horizontal = 8.dp, vertical = 8.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = rememberAsyncImagePainter(model = "file:///android_res/drawable/lupa.png"), // Aquí carga la imagen de la lupa
+                    contentDescription = "Lupa",
+                    modifier = Modifier.size(24.dp) .border(2.dp, Color.Black, CircleShape)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
 
+                BasicTextField(
+                    value = searchText,
+                    onValueChange = { searchText = it },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    decorationBox = { innerTextField ->
+                        if (searchText.isEmpty()) {
+                            Text(
+                                text = "Buscar...",
+                                fontSize = 14.sp,
+                                color = Color.Gray
+                            )
+                        }
+                        innerTextField() // Renderizar el campo de texto
+                    }
+                )
+            }
+        }
 
+        Spacer(modifier = Modifier.height(20.dp))
+        // Mostrar preguntas filtradas
+        preguntasFiltradas.forEach { pregunta ->
+            // Tarjeta de la pregunta
+            ForoPost(
+                userName = "Ximena Méndez Vázquez",
+                userImage = "file:///android_res/drawable/usuario.png",
+                question = "Quisiera saber cómo regresar al inicio.",
+                backgroundColor = Color(0xFF5885C6), // Azul
+                isQuestion = true,
+                showAnswer = showAnswer,
+                onShowAnswerToggle = { showAnswer = !showAnswer }
+            )
+
+        }
         // Tarjeta de la respuesta
         if (showAnswer) {
             ForoPost(
@@ -129,7 +189,7 @@ fun ForoScreen() {
             Text("Hacer Pregunta", color = Color.White)
         }
 
-        Spacer(modifier = Modifier.height(460.dp))
+        Spacer(modifier = Modifier.height(390.dp))
 
         Box(
             modifier = Modifier
@@ -177,6 +237,13 @@ fun ForoScreen() {
                 confirmButton = {
                     Button(
                         onClick = {
+                            preguntas.add(
+                                ForoPregunta(
+                                    userName = "Usuario Anónimo", // Aquí puedes usar el nombre de usuario real
+                                    userImage = "file:///android_res/drawable/usuario.png",
+                                    question = pregunta
+                                )
+                            )
                             showDialog = false
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5885C6))
@@ -223,7 +290,7 @@ fun ForoPost(
             Spacer(modifier = Modifier.size(12.dp))
 
             Column(modifier = Modifier
-                .weight(1f) // ancho para que no choque con el botón
+                .weight(1f) // ancho
                 .padding(end = 40.dp)
             ) {
                 Text(

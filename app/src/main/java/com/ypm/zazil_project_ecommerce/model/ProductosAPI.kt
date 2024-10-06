@@ -1,12 +1,14 @@
 package com.ypm.zazil_project_ecommerce.model
 
 data class ProductosAPI(
-    val asin: String,
-    val product_title: String,
-    val product_price: String,
-    val product_star_rating: String,
-    val product_url: String,
-    val product_photo: String,
+    val id_producto: Int,
+    val nombre_producto: String,
+    val categoria: String,
+    val descripcion: String,
+    val precio: Double,
+    val stock: Int,
+    val ruta_img: String,
+    val URL_producto: String
 )
 
 // Clase para la respuesta completa de la API

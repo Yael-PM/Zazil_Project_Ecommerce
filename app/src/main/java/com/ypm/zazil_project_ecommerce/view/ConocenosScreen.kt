@@ -73,7 +73,7 @@ fun ConocenosUI(navController: NavController) {
                     ) {
                         // Botón Quienes somos con línea abajo
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("¿Quiénes somos?", color = Color.White, fontSize = 20.sp)
+                            Text("Conocenos", color = Color.White, fontSize = 20.sp)
                             Spacer(modifier = Modifier.height(4.dp)) // Espacio entre texto línea
                             Box(
                                 modifier = Modifier

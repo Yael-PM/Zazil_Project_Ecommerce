@@ -79,7 +79,7 @@ fun ComunidadUI(navController: NavController) {
                         onClick = { navController.navigate(RutasNav.CONOCENOS) },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD22973))
                     ) {
-                        Text("¿Quiénes somos?", color = Color.White, fontSize = 20.sp)
+                        Text("Conocenos", color = Color.White, fontSize = 20.sp)
                     }
                 }
             }

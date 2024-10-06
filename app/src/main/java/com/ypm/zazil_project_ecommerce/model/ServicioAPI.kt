@@ -5,14 +5,28 @@ import retrofit2.Retrofit.*
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 import retrofit2.http.Query
+/**
+ * Modela el API para obtener la información de productos
+ **/
 
 interface ServicioAPI {
+    /**
+     * Obtiene la lista de productos con la información específicada
+     * en la estructura de ProductosAPI.kt
+     * @return Una lista de [ProductosAPI] que contiene la información
+     * de cada producto
+     * */
+    @GET("api/productos") //Endpoint de la API
+    suspend fun obtenerListaProductos(): List<ProductosAPI>
 
-    @GET("search?query=Phone&page=1&country=US&sort_by=RELEVANCE&product_condition=ALL&is_prime=false&deals_and_discounts=NONE")
-    suspend fun obtenerProductosAPI(
-        @Header("X-RapidAPI-Key") apiKey: String,
-        @Header("X-RapidAPI-Host") apiHost: String,
-        @Query("country") country: String = "US"
-    ): Response<ApiResponse>
+    /**
+     * Obtiene el dettalle del producto con la información específicada
+     * en la estructura de ProductosAPI.kt
+     * @return Un producto de [ProductosAPI] que contiene la información
+     * de ese producto
+     * */
+    @GET("api/productos/") //Endpoint de la API
+    suspend fun obtenerDetalleProducto(@Path("id") id: Int): ProductosAPI
 }

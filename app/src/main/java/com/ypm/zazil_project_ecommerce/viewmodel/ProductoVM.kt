@@ -12,23 +12,23 @@ import kotlinx.coroutines.launch
 
 class ProductoVM: ViewModel() {
 
-    private val repositorio = ControladorServicioAPI()
+    private val controlador = ControladorServicioAPI()
 
-    private val _productos = MutableStateFlow<List<ProductosAPI>>(emptyList())
-    val productos: StateFlow<List<ProductosAPI>> = _productos
+    private val _listaProductos = MutableStateFlow<List<ProductosAPI>>(emptyList())
+    val listaProductos: StateFlow<List<ProductosAPI>> = _listaProductos
 
-    // Método para obtener los productos y actualizar el estado
-    fun obtenerProductos() {
+    // Estado de la descarga de productos
+    private val _descargando = MutableStateFlow(false)
+    val descargando: StateFlow<Boolean> = _descargando
+
+    // Método para obtener la lista productos y actualizar el estado
+    fun obtenerListaProductos() {
+        _descargando.value = true
         viewModelScope.launch {
-            val productosList = repositorio.obtenerProductos()
-            if (productosList != null) {
-                _productos.value = productosList
-
-                // Imprimir la lista de productos
-                Log.d("ProductoViewModel", "Lista de productos: $productosList")
-            } else {
-                Log.d("ProductoViewModel", "No se pudieron obtener los productos.")
-            }
+            //Descargar la lista de productos
+            val listaP = controlador.obtenerListaProductos()
+            _listaProductos.value = listaP
+            _descargando.value = false
         }
     }
 }

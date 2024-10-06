@@ -39,7 +39,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.ypm.zazil_project_ecommerce.view.components.BottomBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CuentaUI(navController: NavController) {
     

@@ -8,11 +8,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +42,7 @@ import com.ypm.zazil_project_ecommerce.R
 import com.ypm.zazil_project_ecommerce.model.ProductosAPI
 import com.ypm.zazil_project_ecommerce.view.components.BannerCarrusel
 import com.ypm.zazil_project_ecommerce.view.components.BottomBar
+import com.ypm.zazil_project_ecommerce.view.components.CardStore
 import com.ypm.zazil_project_ecommerce.view.components.SearchBar
 import com.ypm.zazil_project_ecommerce.viewmodel.ProductoVM
 
@@ -79,43 +85,38 @@ fun TiendaUI(navController: NavController){
 }
 
 @Composable
-fun ProductoListScreen(viewModel: ProductoVM = viewModel()) {
-    val productos by viewModel.productos.collectAsState()
+fun ProductoListScreen(productoVM: ProductoVM = viewModel()) {
+
+    val productos by productoVM.listaProductos.collectAsState()
+    val descargando by productoVM.descargando.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.obtenerProductos()
+        productoVM.obtenerListaProductos()
     }
+
+    // Indicador de descarga (círculo)
+    if(descargando){
+        CircularProgressIndicator(
+            modifier = Modifier
+                .padding(top = 30.dp)
+        )
+    }
+
+    Spacer(modifier = Modifier.height(30.dp))
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        items(productos.size) { index ->
-            ProductoItem(producto = productos[index])
-        }
-    }
-}
-
-@Composable
-fun ProductoItem(producto: ProductosAPI) {
-    Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-
-        Image(
-            painter = rememberAsyncImagePainter(model = producto.product_photo),
-            contentDescription = producto.product_title,
-            modifier = Modifier.size(80.dp)
-        )
-
-        Column(
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text(text = producto.product_title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            Text(text = producto.product_price, fontSize = 14.sp)
+            .padding(start = 16.dp, end = 16.dp)
+    ){
+        productos.forEach { producto ->
+            item {
+                CardStore(
+                    imagen = R.drawable.logo_zazil_prueba,
+                    nombre = producto.nombre_producto,
+                    precio = producto.precio.toString(),
+                    rating = "5.0"
+                )
+            }
         }
     }
 }

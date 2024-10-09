@@ -113,6 +113,7 @@ fun ProductoListScreen(productoVM: ProductoVM = viewModel()) {
             productos.forEach { producto ->
                 item {
                     CardStore(
+                        // La imagen está en proceso de mostrarse
                         imagen = producto.ruta_img,
                         nombre = producto.nombre_producto,
                         precio = producto.precio.toString(),

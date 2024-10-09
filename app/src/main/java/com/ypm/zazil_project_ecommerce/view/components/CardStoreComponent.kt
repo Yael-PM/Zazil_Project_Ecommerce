@@ -34,7 +34,7 @@ import com.ypm.zazil_project_ecommerce.view.Modifiers.customBackgrond
 @SuppressLint("ResourceAsColor")
 @Composable
 fun CardStore(
-    imagen: Int,
+    imagen: String,
     nombre: String,
     precio: String,
     rating: String
@@ -140,7 +140,7 @@ fun CardStore(
 @Composable
 fun PreviewCard(){
     CardStore(
-        imagen = R.drawable.logo_zazil_prueba,
+        imagen = R.drawable.logo_zazil_prueba.toString(),
         nombre = "Producto",
         precio = "$100.00",
         rating = "4.5"

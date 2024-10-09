@@ -12,22 +12,16 @@ import retrofit2.http.POST
 interface ServicioPOSTAPI {
     /**
      * Manda una petición POST a la API para verificar que un usuario existe
-     * */
-    @FormUrlEncoded
+     **/
+
     @POST("api/login")
     suspend fun verificarUsuario(
-        @Field("correo") phone: String,
-        @Field("password") password: String
+        @Body usuario: LoginRequest
     ): Response<LoginResponse>
 
 
-    @FormUrlEncoded
     @POST("api/register")
     suspend fun registrarUsuario(
-        @Field("nombre") nombre: String,
-        @Field("apellidoPaterno") apellidoPaterno: String,
-        @Field("apellidoMaterno") apellidoMaterno: String,
-        @Field("correo") correo: String,
-        @Field("password") password: String
+        @Body usuario: UsuariosAPI
     ): Response<UsuariosAPI>
 }

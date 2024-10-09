@@ -1,11 +1,13 @@
 package com.ypm.zazil_project_ecommerce.viewmodel
 
 import android.util.Patterns
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.ypm.zazil_project_ecommerce.model.ControladorServicioAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.UsuariosAPI
 import kotlinx.coroutines.launch
@@ -98,16 +100,23 @@ class RegistroVM: ViewModel() {
         return Patterns.EMAIL_ADDRESS.matcher(correo).matches() && correo.isNotEmpty()
     }
 
-    fun registroValido(nombre: String, apellidoPaterno: String, apellidoMaterno: String, correo: String, password: String) {
+    fun registroValido(nombre: String, apellidoPaterno: String, apellidoMaterno: String, correo: String, password: String, navController: NavController) {
         viewModelScope.launch {
-            try{
-                val repsonse = controlador.register(nombre, apellidoPaterno, apellidoMaterno, correo, password)
-                if(repsonse.isSuccessful){
-                    registerResponse.value = repsonse.body()
-                }else{
-                    registerError.value = "Error en el registro"
+            try {
+                // valores predeterminados
+                val tipoUsuario = "usuario_n"  // Valor fijo
+                val estatus = "activo"           // Valor fijo
+                val response = controlador.register(nombre, apellidoPaterno, apellidoMaterno, correo, password, tipoUsuario, estatus)
+                if (response.isSuccessful) {
+                    registerResponse.value = response.body()
+                    Toast.makeText(navController.context, "Registro exitoso", Toast.LENGTH_SHORT).show()
+                } else {
+                    // obtener el código de estado y el cuerpo de la respuesta
+                    val errorBody = response.errorBody()?.string() // Captura el cuerpo del error
+                    registerError.value = "Error en el registro: ${response.code()} - $errorBody"
+                    Toast.makeText(navController.context, "Registro inválido", Toast.LENGTH_SHORT).show()
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 registerError.value = e.message
             }
         }

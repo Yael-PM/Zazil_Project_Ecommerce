@@ -260,7 +260,7 @@ fun IniciarSesionScreen(navController: NavController = rememberNavController(), 
                 // Botón "Iniciar sesión"
                 Button(
                     onClick = {
-                        viewModel.validarLogin(correo, password)
+                        viewModel.validarLogin(correo, password, navController)
                     },
                     enabled = loginEnable,
                     modifier = Modifier

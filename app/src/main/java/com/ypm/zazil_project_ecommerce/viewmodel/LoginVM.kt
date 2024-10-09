@@ -1,10 +1,12 @@
 package com.ypm.zazil_project_ecommerce.viewmodel
 
 import android.util.Patterns
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.ypm.zazil_project_ecommerce.model.ControladorServicioAPI
 import com.ypm.zazil_project_ecommerce.model.ServicioPOSTAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginRequest
@@ -73,22 +75,22 @@ class LoginVM: ViewModel() {
         return password.length >= 6 && password.isNotEmpty()
     }
 
-    fun validarLogin(correo: String, password: String){
+    fun validarLogin(correo: String, password: String, navController: NavController){
         viewModelScope.launch {
             try{
                 val response = controlador.login(correo, password)
                 if(response.isSuccessful){
                     response.body()?.let{
                         loginResponse.value = it
-
-                        if (it.estatus){
-
-                        }else{
-                            loginError.value = it.message
+                        navController.navigate(RutasNav.HOME)
+                        Toast.makeText(navController.context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+                        if (!it.estatus){
+                            loginError.value = it.estatus.toString()
                         }
                     }
                 }else{
                     loginError.value = "Error en el inicio de sesión"
+                    Toast.makeText(navController.context, "Inicio de sesión inválido", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception){
                 loginError.value = e.message

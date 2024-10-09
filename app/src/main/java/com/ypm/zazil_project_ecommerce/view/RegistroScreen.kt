@@ -209,7 +209,7 @@ fun RegistroUI(navController: NavController, viewModel: RegistroVM) {
                 // Botón "Crear Cuenta"
                 Button(
                     onClick = {
-                        viewModel.registroValido(nombre, apellidoPaterno, apellidoMaterno, correo, password)
+                        viewModel.registroValido(nombre, apellidoPaterno, apellidoMaterno, correo, password, navController)
                     },
                     enabled = registroEnabled,
                     modifier = Modifier

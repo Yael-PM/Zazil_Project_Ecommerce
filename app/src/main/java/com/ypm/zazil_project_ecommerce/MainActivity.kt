@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,6 +54,8 @@ import com.ypm.zazil_project_ecommerce.view.HistorialUI
 import com.ypm.zazil_project_ecommerce.view.HomeUI
 import com.ypm.zazil_project_ecommerce.view.RegistroUI
 import com.ypm.zazil_project_ecommerce.view.TiendaUI
+import com.ypm.zazil_project_ecommerce.viewmodel.LoginVM
+import com.ypm.zazil_project_ecommerce.viewmodel.RegistroVM
 import com.ypm.zazil_project_ecommerce.viewmodel.RutasNav
 
 class MainActivity : ComponentActivity() {
@@ -82,13 +85,13 @@ fun NavegacionRutasLogin(
         startDestination = RutasNav.LOGIN
     ) {
         composable(RutasNav.LOGIN){
-            IniciarSesionScreen(navController)
+            IniciarSesionScreen(navController, LoginVM())
         }
         composable(RutasNav.HOME){
             HomeUI(navController)
         }
         composable(RutasNav.REGISTRO){
-            RegistroUI(navController)
+            RegistroUI(navController, RegistroVM())
         }
         composable(RutasNav.FORGOTPASS){
             ForgotPassUI(navController)
@@ -115,10 +118,15 @@ fun NavegacionRutasLogin(
 }
 
 @Composable
-fun IniciarSesionScreen(navController: NavController = rememberNavController()) {
+fun IniciarSesionScreen(navController: NavController = rememberNavController(), viewModel: LoginVM) {
 
-    var password by remember { mutableStateOf("") }
-    var correo by remember { mutableStateOf("") }
+    val correo: String by viewModel.correo.observeAsState("")
+    val password: String by viewModel.password.observeAsState("")
+    val correoError: String? by viewModel.correoError.observeAsState("")
+    val passwordError: String? by viewModel.passwordError.observeAsState("")
+    val loginEnable: Boolean by viewModel.loginEnabled.observeAsState(false)
+    val loginResponse by viewModel.loginResponse.observeAsState()
+    val loginError by viewModel.loginError.observeAsState()
     var check by remember { mutableStateOf(true) }
 
     Column(
@@ -172,7 +180,7 @@ fun IniciarSesionScreen(navController: NavController = rememberNavController()) 
                 // Campos de entrada
                 OutlinedTextField(
                     value = correo,
-                    onValueChange = { correo = it },
+                    onValueChange = { viewModel.cambioLogin(it, password) },
                     label = { Text("Correo Electrónico") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier
@@ -181,9 +189,17 @@ fun IniciarSesionScreen(navController: NavController = rememberNavController()) 
                     shape = RoundedCornerShape(12.dp),
                     textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
                 )
+                correoError?.let {
+                    Text(
+                        text = it,
+                        fontSize = 14.sp,
+                        color = Color.Red
+                    )
+                }
+
                 OutlinedTextField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = { viewModel.cambioLogin(correo, it) },
                     label = { Text("Contraseña") },
                     visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier
@@ -192,6 +208,13 @@ fun IniciarSesionScreen(navController: NavController = rememberNavController()) 
                     shape = RoundedCornerShape(12.dp),
                     textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
                 )
+                passwordError?.let {
+                    Text(
+                        text = it,
+                        fontSize = 14.sp,
+                        color = Color.Red
+                    )
+                }
 
                 // Enlaces de recuperación de contraseña y registro
                 Row(
@@ -237,8 +260,9 @@ fun IniciarSesionScreen(navController: NavController = rememberNavController()) 
                 // Botón "Iniciar sesión"
                 Button(
                     onClick = {
-                        navController.navigate(RutasNav.HOME)
+                        viewModel.validarLogin(correo, password)
                     },
+                    enabled = loginEnable,
                     modifier = Modifier
                         .fillMaxWidth(0.85f)
                         .height(50.dp),
@@ -255,5 +279,5 @@ fun IniciarSesionScreen(navController: NavController = rememberNavController()) 
 @Preview(showBackground = true)
 @Composable
 fun IniciarSesionScreenPreview() {
-    IniciarSesionScreen()
+    IniciarSesionScreen(viewModel = LoginVM())
 }

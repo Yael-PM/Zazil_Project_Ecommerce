@@ -1,5 +1,6 @@
 package com.ypm.zazil_project_ecommerce.view
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +18,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,15 +35,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ypm.zazil_project_ecommerce.viewmodel.RegistroVM
 import com.ypm.zazil_project_ecommerce.viewmodel.RutasNav
 
 @Composable
-fun RegistroUI(navController: NavController) {
+fun RegistroUI(navController: NavController, viewModel: RegistroVM) {
 
-    var nombre by remember { mutableStateOf("") }
-    var apellidos by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var correo by remember { mutableStateOf("") }
+    val nombre by viewModel.nombre.observeAsState("")
+    val apellidoPaterno by viewModel.apellidoPaterno.observeAsState("")
+    val apellidoMaterno by viewModel.apellidoMaterno.observeAsState("")
+    val correo by viewModel.correo.observeAsState("")
+    val password by viewModel.password.observeAsState("")
+    val registroEnabled: Boolean by viewModel.registroEnabled.observeAsState(false)
+    val registerResponse by viewModel.registerResponse.observeAsState(null)
+    val registerError by viewModel.registerError.observeAsState(null)
+    val campoError by viewModel.campoError.observeAsState(null)
+    val correoError by viewModel.correoError.observeAsState(null)
+    val passwordError by viewModel.passwordError.observeAsState(null)
 
     Column(
         modifier = Modifier
@@ -93,7 +104,7 @@ fun RegistroUI(navController: NavController) {
                 // Campos de entrada
                 OutlinedTextField(
                     value = nombre,
-                    onValueChange = { nombre = it },
+                    onValueChange = { viewModel.validRegister(it, apellidoPaterno, apellidoMaterno, correo, password) },
                     label = { Text("Nombre(s)") },
                     modifier = Modifier
                         .fillMaxWidth(0.85f)
@@ -101,19 +112,53 @@ fun RegistroUI(navController: NavController) {
                     shape = RoundedCornerShape(12.dp),  // Bordes redondeados
                     textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
                 )
+                campoError?.let {
+                    Text(
+                        text = it,
+                        fontSize = 14.sp,
+                        color = Color.Red
+                    )
+                }
+
                 OutlinedTextField(
-                    value = apellidos,
-                    onValueChange = { apellidos = it },
-                    label = { Text("Apellidos") },
+                    value = apellidoPaterno,
+                    onValueChange = { viewModel.validRegister(nombre, it, apellidoMaterno, correo, password) },
+                    label = { Text("Apellido Paterno") },
                     modifier = Modifier
                         .fillMaxWidth(0.85f)
                         .padding(bottom = 16.dp),
                     shape = RoundedCornerShape(12.dp),
                     textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
                 )
+                campoError?.let {
+                    Text(
+                        text = it,
+                        fontSize = 14.sp,
+                        color = Color.Red
+                    )
+                }
+
+                OutlinedTextField(
+                    value = apellidoMaterno,
+                    onValueChange = { viewModel.validRegister(nombre, apellidoPaterno, it, correo, password) },
+                    label = { Text("Apellido Materno") },
+                    modifier = Modifier
+                        .fillMaxWidth(0.85f)
+                        .padding(bottom = 16.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
+                )
+                campoError?.let {
+                    Text(
+                        text = it,
+                        fontSize = 14.sp,
+                        color = Color.Red
+                    )
+                }
+
                 OutlinedTextField(
                     value = correo,
-                    onValueChange = { correo = it },
+                    onValueChange = { viewModel.validRegister(nombre, apellidoPaterno, apellidoMaterno, it, password) },
                     label = { Text("Correo electrónico") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier
@@ -122,9 +167,17 @@ fun RegistroUI(navController: NavController) {
                     shape = RoundedCornerShape(12.dp),
                     textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
                 )
+                correoError?.let {
+                    Text(
+                        text = it,
+                        fontSize = 14.sp,
+                        color = Color.Red
+                    )
+                }
+
                 OutlinedTextField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = { viewModel.validRegister(nombre, apellidoPaterno, apellidoMaterno, correo, it) },
                     label = { Text("Contraseña") },
                     visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier
@@ -133,6 +186,13 @@ fun RegistroUI(navController: NavController) {
                     shape = RoundedCornerShape(12.dp),
                     textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
                 )
+                passwordError?.let {
+                    Text(
+                        text = it,
+                        fontSize = 14.sp,
+                        color = Color.Red
+                    )
+                }
 
                 // Enlace de sesión
                 Text(
@@ -148,7 +208,10 @@ fun RegistroUI(navController: NavController) {
 
                 // Botón "Crear Cuenta"
                 Button(
-                    onClick = { /* Acción de crear cuenta */ },
+                    onClick = {
+                        viewModel.registroValido(nombre, apellidoPaterno, apellidoMaterno, correo, password)
+                    },
+                    enabled = registroEnabled,
                     modifier = Modifier
                         .fillMaxWidth(0.85f)
                         .height(50.dp),
@@ -156,6 +219,20 @@ fun RegistroUI(navController: NavController) {
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text("Crear Cuenta", color = Color.White, fontSize = 18.sp)
+                }
+
+                when {
+                    registerResponse != null -> {
+                        LaunchedEffect(Unit) {
+                            navController.navigate(RutasNav.LOGIN)
+                        }
+                    }
+
+                    registerError != null ->
+                        Text(
+                            text = registerError ?: "Error",
+                            color = Color.Red,
+                        )
                 }
             }
         }
@@ -166,5 +243,5 @@ fun RegistroUI(navController: NavController) {
 @Composable
 fun PreviewRegister(){
     val navController = rememberNavController()
-    RegistroUI(navController = navController)
+    RegistroUI(navController = navController, viewModel = RegistroVM())
 }

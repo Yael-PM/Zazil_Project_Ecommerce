@@ -1,11 +1,9 @@
 package com.ypm.zazil_project_ecommerce.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ypm.zazil_project_ecommerce.model.ControladorServicioAPI
-import com.ypm.zazil_project_ecommerce.model.ProductosAPI
+import com.ypm.zazil_project_ecommerce.model.dataAPI.ProductosAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

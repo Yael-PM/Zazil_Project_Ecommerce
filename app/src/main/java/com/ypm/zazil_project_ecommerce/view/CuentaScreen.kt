@@ -90,7 +90,7 @@ fun CuentaUI(navController: NavController) {
 
                         // Nombre de perfil
                         Text(
-                            text = "Jorge López Pérez",
+                            text = "Renato Garcia Morán",
                             color = Color.Black,
                             fontSize = 30.sp,
                             modifier = Modifier.padding(vertical = 1.dp)

@@ -1,4 +1,4 @@
-package com.ypm.zazil_project_ecommerce.model
+package com.ypm.zazil_project_ecommerce.model.dataAPI
 
 data class ProductosAPI(
     val id_producto: Int,

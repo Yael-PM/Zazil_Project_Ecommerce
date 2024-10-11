@@ -33,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ypm.zazil_project_ecommerce.R
+import com.ypm.zazil_project_ecommerce.view.Modifiers.customBackgrond
 import com.ypm.zazil_project_ecommerce.view.components.BannerCarrusel
 import com.ypm.zazil_project_ecommerce.view.components.BottomBar
 import com.ypm.zazil_project_ecommerce.view.components.CardStore
@@ -57,7 +58,7 @@ fun TiendaUI(navController: NavController){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .customBackgrond(idColor = R.color.fondo_default)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
@@ -73,13 +74,13 @@ fun TiendaUI(navController: NavController){
 
             BannerCarrusel(bannerItems = banners)
 
-            ProductoListScreen()
+            ProductoListScreen(navController = navController)
         }
     }
 }
 
 @Composable
-fun ProductoListScreen(productoVM: ProductoVM = viewModel()) {
+fun ProductoListScreen(productoVM: ProductoVM = viewModel(), navController: NavController) {
 
     val productos by productoVM.listaProductos.collectAsState()
     val descargando by productoVM.descargando.collectAsState()
@@ -114,12 +115,18 @@ fun ProductoListScreen(productoVM: ProductoVM = viewModel()) {
                 item {
                     CardStore(
                         // La imagen está en proceso de mostrarse
-                        imagen = producto.ruta_img,
+                        id = producto.id_producto,
+                        imagen = "http://187.145.186.58:4000/api/imagenes/" + producto.ruta_img,
                         nombre = producto.nombre_producto,
                         precio = producto.precio.toString(),
-                        rating = "5.0"
+                        rating = producto.rating,
+                        stock = producto.stock,
+                        descripcion = producto.descripcion,
+                        navController = navController
                     )
+                    println(producto.ruta_img)
                 }
+
             }
         }
     }

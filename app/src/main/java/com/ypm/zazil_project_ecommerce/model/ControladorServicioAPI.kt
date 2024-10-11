@@ -12,17 +12,16 @@ class ControladorServicioAPI {
     // Configuración de Retrofit
     private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("http://10.48.65.115:4000/") // URL base de la API
+            .baseUrl("http://187.145.186.58:4000/") // URL base de la API
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
+    /**
+     * SERVICIOS GET PARA OBTENER INFORMACIÓN DE LA API
+     **/
     private val servicioGET by lazy {
         retrofit.create(ServicioGETAPI::class.java)
-    }
-
-    private val servicioPOST by lazy {
-        retrofit.create(ServicioPOSTAPI::class.java)
     }
 
     // Método para obtener la lista de productos
@@ -30,6 +29,26 @@ class ControladorServicioAPI {
         return servicioGET.obtenerListaProductos()
     }
 
+    //Método para obtener el detalle de un producto
+    suspend fun obtenerProducto(id: String): ProductosAPI {
+        val producto = servicioGET.obtenerProducto(id)
+        return producto
+    }
+
+    //Método para obtener el detalle de un usuario
+    suspend fun obtenerUsuario(id: String): UsuariosAPI {
+        val usuario = servicioGET.obtenerUsuario(id)
+        return usuario
+    }
+
+    /**
+     * SERVICIOS POST PARA OBTENER INFORMACIÓN DE LA API
+     **/
+    private val servicioPOST by lazy {
+        retrofit.create(ServicioPOSTAPI::class.java)
+    }
+
+    // Método para iniciar sesión con correo y contraseña con una petición POST
     suspend fun login(correo: String, password: String): Response<LoginResponse> {
         val usuario = LoginRequest(
             email = correo,
@@ -38,13 +57,14 @@ class ControladorServicioAPI {
         return servicioPOST.verificarUsuario(usuario)
     }
 
+    // Método para registrar un nuevo usuario con una petición POST
     suspend fun register(
         nombre: String,
         apellidoPaterno: String,
         apellidoMaterno: String,
         correo: String,
         password: String,
-        tipoUsuario: String = "usuario_n",  // Valor predeterminado
+        tipoUsuario: String = "usuario_n",  // Valor predeterminado del usuario nomarl
         estatus: String = "activo"            // Valor predeterminado
     ): Response<UsuariosAPI> {
         // Crea un objeto UsuariosAPI con los datos proporcionados
@@ -53,11 +73,11 @@ class ControladorServicioAPI {
             nombre = nombre,
             apellido_paterno = apellidoPaterno,
             apellido_materno = apellidoMaterno,
-            f_nacimiento = "10/10/2001", // Si no tienes fecha de nacimiento, puedes dejarlo vacío
+            f_nacimiento = "10/10/2001",
             tipo_usuario = tipoUsuario, // Valor por defecto
             estatus = estatus, // Valor por defecto
             email = correo,
-            ruta_img = "img", // Si no tienes imagen, puedes dejarlo vacío
+            ruta_img = "img", // Si no tienes imagen, puedes dejarlo vacío para luego modificarla en el perfil
             password = password
         )
 

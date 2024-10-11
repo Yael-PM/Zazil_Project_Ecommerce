@@ -9,7 +9,8 @@ object RutasNav {
     const val CONOCENOS = "conocenos"
     const val HISTORIAL = "historial"
     const val TIENDA = "tienda"
-    const val PERFIL = "perfil"
+    const val PERFIL = "perfil/{id}" //Ruta para ir al perfil del usuario
     const val PAGO = "pago"
     const val CARRITO = "carrito"
+    const val DESTALLES = "detalle/{id}" //Ruta para ir al detalle del producto
 }

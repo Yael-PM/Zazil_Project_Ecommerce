@@ -23,5 +23,6 @@ data class LoginRequest(
 // Modelo de datos que verifica al usuario
 data class LoginResponse(
     val estatus: Boolean,
+    val id: Int
 )
 

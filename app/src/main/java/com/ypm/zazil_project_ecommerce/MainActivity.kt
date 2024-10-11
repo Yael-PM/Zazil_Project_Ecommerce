@@ -22,7 +22,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,6 +48,7 @@ import com.ypm.zazil_project_ecommerce.view.CarritoUI
 import com.ypm.zazil_project_ecommerce.view.ComunidadUI
 import com.ypm.zazil_project_ecommerce.view.ConocenosUI
 import com.ypm.zazil_project_ecommerce.view.CuentaUI
+import com.ypm.zazil_project_ecommerce.view.DetalleUI
 import com.ypm.zazil_project_ecommerce.view.ForgotPassUI
 import com.ypm.zazil_project_ecommerce.view.HistorialUI
 import com.ypm.zazil_project_ecommerce.view.HomeUI
@@ -100,7 +100,8 @@ fun NavegacionRutasLogin(
             HistorialUI(navController)
         }
         composable(RutasNav.PERFIL){
-            CuentaUI(navController)
+            val usuario = it.arguments?.getString("id")
+            CuentaUI(usuario, navController)
         }
         composable(RutasNav.COMUNIDAD){
             ComunidadUI(navController)
@@ -114,6 +115,10 @@ fun NavegacionRutasLogin(
         composable(RutasNav.CONOCENOS){
             ConocenosUI(navController)
         }
+        composable(RutasNav.DESTALLES){
+            val producto = it.arguments?.getString("id")
+            DetalleUI(producto, navController)
+        }
     }
 }
 
@@ -122,8 +127,8 @@ fun IniciarSesionScreen(navController: NavController = rememberNavController(), 
 
     val correo: String by viewModel.correo.observeAsState("")
     val password: String by viewModel.password.observeAsState("")
-    val correoError: String? by viewModel.correoError.observeAsState("")
-    val passwordError: String? by viewModel.passwordError.observeAsState("")
+    val correoError: String? by viewModel.correoError.observeAsState(null)
+    val passwordError: String? by viewModel.passwordError.observeAsState(null)
     val loginEnable: Boolean by viewModel.loginEnabled.observeAsState(false)
     val loginResponse by viewModel.loginResponse.observeAsState()
     val loginError by viewModel.loginError.observeAsState()
@@ -261,6 +266,7 @@ fun IniciarSesionScreen(navController: NavController = rememberNavController(), 
                 Button(
                     onClick = {
                         viewModel.validarLogin(correo, password, navController)
+                        //navController.navigate(RutasNav.HOME)
                     },
                     enabled = loginEnable,
                     modifier = Modifier

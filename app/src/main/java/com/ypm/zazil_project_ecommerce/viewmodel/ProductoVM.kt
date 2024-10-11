@@ -15,6 +15,9 @@ class ProductoVM: ViewModel() {
     private val _listaProductos = MutableStateFlow<List<ProductosAPI>>(emptyList())
     val listaProductos: StateFlow<List<ProductosAPI>> = _listaProductos
 
+    private val _producto = MutableStateFlow(ProductosAPI())
+    val producto: StateFlow<ProductosAPI> = _producto
+
     // Estado de la descarga de productos
     private val _descargando = MutableStateFlow(false)
     val descargando: StateFlow<Boolean> = _descargando
@@ -27,6 +30,13 @@ class ProductoVM: ViewModel() {
             val listaP = controlador.obtenerListaProductos()
             _listaProductos.value = listaP
             _descargando.value = false
+        }
+    }
+
+    fun obtenerProducto(id: String) {
+        _descargando.value = true
+        viewModelScope.launch {
+            _producto.value = controlador.obtenerProducto(id)
         }
     }
 }

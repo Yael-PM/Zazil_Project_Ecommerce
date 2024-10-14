@@ -37,6 +37,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.ypm.zazil_project_ecommerce.R
 import com.ypm.zazil_project_ecommerce.view.Modifiers.customBackgrond
+import com.ypm.zazil_project_ecommerce.viewmodel.CarritoVM
 
 @SuppressLint("ResourceAsColor")
 @Composable
@@ -50,6 +51,9 @@ fun CardStore(
     stock: Int,
     navController: NavController
 ){
+    val carritoVM: CarritoVM = CarritoVM()
+    val botonCarrito = carritoVM.estadoCarrito
+
     Card(
 
     ){
@@ -155,7 +159,7 @@ fun CardStore(
             FloatingActionButton(
                 onClick = {
                     if (addCarrito) {
-                        icono_carrito = R.drawable.car_icon_fill
+                        //Aquí va el estado del carrito
                     }
                 },
                 modifier = Modifier

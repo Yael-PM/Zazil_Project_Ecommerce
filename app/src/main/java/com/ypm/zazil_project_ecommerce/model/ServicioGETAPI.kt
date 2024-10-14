@@ -1,5 +1,6 @@
 package com.ypm.zazil_project_ecommerce.model
 
+import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginResponse
 import com.ypm.zazil_project_ecommerce.model.dataAPI.ProductosAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.UsuariosAPI
 import retrofit2.http.GET
@@ -32,7 +33,7 @@ interface ServicioGETAPI {
      * Obtiene la infromación del usuario en la estructura de UsuariosAPI.kt
      * @return Un usuario de tipo [UsuariosAPI]
      **/
-    @GET("api/usuarios/{id}") //Endpoint de la API
-    suspend fun obtenerUsuario(@Path("id") id: String): UsuariosAPI
+    @GET("api/usuario/{id}") //Endpoint de la API
+    suspend fun obtenerUsuario(@Path("id") id: String): LoginResponse
 
 }

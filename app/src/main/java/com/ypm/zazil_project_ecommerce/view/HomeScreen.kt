@@ -1,6 +1,5 @@
 package com.ypm.zazil_project_ecommerce.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,9 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,107 +28,121 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import com.ypm.zazil_project_ecommerce.IniciarSesionScreen
 import com.ypm.zazil_project_ecommerce.R
+import com.ypm.zazil_project_ecommerce.viewmodel.CuentaVM
 import com.ypm.zazil_project_ecommerce.viewmodel.RutasNav
 
 @Composable
-fun HomeUI(navController: NavController) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFD22973))
-            .padding(),
-        contentAlignment = Alignment.BottomStart
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        )  {
-            Spacer(modifier = Modifier.height(20.dp))
-            Image(
-                painter = rememberAsyncImagePainter(model = "file:///android_res/drawable/perfil.png"),
-                contentDescription = "Perfil",
-                modifier = Modifier
-                    .size(200.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, Color.White, CircleShape)
-                    .padding(top = 136.dp)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+fun HomeUI(usuario: String?, navController: NavController) {
+    val cuentaVM: CuentaVM = viewModel()
+    val infoUsuario = cuentaVM.usuario.collectAsState().value
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(700.dp)
-                    .background(Color.White, shape = RoundedCornerShape(24.dp))
-                    .padding(top = 54.dp),
-                contentAlignment = Alignment.TopCenter
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+    usuario?.let {
+        cuentaVM.obtenerUsuario(it)
+    }
 
-                    // Nombre del usuario
-                    Text(
-                        text = "Jorge López Pérez",
-                        color = Color.Black,
-                        fontSize = 29.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 50.dp)
+    infoUsuario.let {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFD22973))
+                .padding(),
+            contentAlignment = Alignment.BottomStart
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            )  {
+                Spacer(modifier = Modifier.height(20.dp))
+                Box(
+                    modifier = Modifier
+                        .size(200.dp)
+                        .border(2.dp, Color.White, CircleShape),
+                    contentAlignment = Alignment.Center
+                ){
+                    AsyncImage(
+                        model = "http://187.145.186.58:4000/api/imagenes_usuario/" + it.ruta_img,
+                        contentDescription = "Foto de perfil",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape),
                     )
+                }
 
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        HomeButton(
-                            painter = painterResource(id = R.drawable.store_icon_fill),
-                            text = "Tienda",
-                            Modifier.clickable(onClick = {
-                                navController.navigate(RutasNav.TIENDA)
-                            })
-                        )
-                        HomeButton(
-                            painter = painterResource(id = R.drawable.list_icon_fill),
-                            text = "Historial",
-                            Modifier.clickable(onClick = {
-                                navController.navigate(RutasNav.HISTORIAL)
-                            })
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        modifier = Modifier.fillMaxWidth()
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(700.dp)
+                        .background(Color.White, shape = RoundedCornerShape(24.dp))
+                        .padding(top = 54.dp),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        HomeButton(
-                            painter = painterResource(id = R.drawable.person_icon_fill),
-                            text = "Cuenta",
-                            Modifier.clickable(onClick = {
-                                navController.navigate(RutasNav.PERFIL)
-                            })
+
+                        // Nombre del usuario
+                        Text(
+                            text = "${it.nombre} ${it.apellido_paterno} ${it.apellido_materno}",
+                            color = Color.Black,
+                            fontSize = 29.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 50.dp)
                         )
-                        HomeButton(
-                            painterResource(id = R.drawable.groups_icon_fill),
-                            text = "Comunidad",
-                            Modifier.clickable(onClick = {
-                                navController.navigate(RutasNav.COMUNIDAD)
-                            })
-                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            HomeButton(
+                                painter = painterResource(id = R.drawable.store_icon_fill),
+                                text = "Tienda",
+                                Modifier.clickable(onClick = {
+                                    navController.navigate(RutasNav.TIENDA)
+                                })
+                            )
+                            HomeButton(
+                                painter = painterResource(id = R.drawable.list_icon_fill),
+                                text = "Historial",
+                                Modifier.clickable(onClick = {
+                                    navController.navigate(RutasNav.HISTORIAL)
+                                })
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            HomeButton(
+                                painter = painterResource(id = R.drawable.person_icon_fill),
+                                text = "Cuenta",
+                                Modifier.clickable(onClick = {
+                                    navController.navigate("perfil/${infoUsuario.id_usuario}")
+                                })
+                            )
+                            HomeButton(
+                                painterResource(id = R.drawable.groups_icon_fill),
+                                text = "Comunidad",
+                                Modifier.clickable(onClick = {
+                                    navController.navigate(RutasNav.COMUNIDAD)
+                                })
+                            )
+                        }
                     }
                 }
             }
         }
     }
+
 }
 
 @Composable

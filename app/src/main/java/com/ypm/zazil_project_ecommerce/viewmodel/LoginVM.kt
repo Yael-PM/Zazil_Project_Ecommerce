@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.ypm.zazil_project_ecommerce.model.ControladorServicioAPI
-import com.ypm.zazil_project_ecommerce.model.ServicioPOSTAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginRequest
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginResponse
 import kotlinx.coroutines.launch
@@ -75,17 +74,26 @@ class LoginVM: ViewModel() {
         return password.length >= 6 && password.isNotEmpty()
     }
 
-    fun validarLogin(correo: String, password: String, navController: NavController){
+    fun validarLogin(
+        correo: String,
+        password: String,
+        navController: NavController,
+    ){
         viewModelScope.launch {
             try{
                 val response = controlador.login(correo, password)
                 if(response.isSuccessful){
                     response.body()?.let{
                         loginResponse.value = it
-                        navController.navigate(RutasNav.HOME)
-                        Toast.makeText(navController.context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
-                        if (!it.estatus){
-                            loginError.value = it.estatus.toString()
+                        if (it.id_usuario != null){
+                            navController.navigate("home/${it.id_usuario}")
+                            Toast.makeText(navController.context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(navController.context, "No hay ID", Toast.LENGTH_SHORT).show()
+                        }
+
+                        if (!it.status_login){
+                            loginError.value = it.status_login.toString()
                         }
                     }
                 }else{

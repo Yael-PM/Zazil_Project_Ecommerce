@@ -5,6 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun CarritoUI(navController: NavController){
+fun CarritoUI(usuario: String?, navController: NavController){
     Text(text = "Carrito")
 }

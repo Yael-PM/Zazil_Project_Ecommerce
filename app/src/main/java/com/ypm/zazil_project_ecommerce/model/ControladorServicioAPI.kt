@@ -35,8 +35,8 @@ class ControladorServicioAPI {
         return producto
     }
 
-    //Método para obtener el detalle de un usuario
-    suspend fun obtenerUsuario(id: String): UsuariosAPI {
+    //Método para obtener el perfil de un usuario
+    suspend fun obtenerUsuario(id: String): LoginResponse {
         val usuario = servicioGET.obtenerUsuario(id)
         return usuario
     }

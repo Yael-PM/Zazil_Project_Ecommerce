@@ -13,12 +13,10 @@ interface ServicioPOSTAPI {
     /**
      * Manda una petición POST a la API para verificar que un usuario existe
      **/
-
     @POST("api/login")
     suspend fun verificarUsuario(
         @Body usuario: LoginRequest
     ): Response<LoginResponse>
-
 
     @POST("api/register")
     suspend fun registrarUsuario(

@@ -31,7 +31,7 @@ import androidx.navigation.compose.rememberNavController
 
 
 @Composable
-fun HistorialUI(navController: NavController) {
+fun HistorialUI(usuario: String?, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -108,5 +108,5 @@ fun HistorialUI(navController: NavController) {
 @Composable
 fun PreviewHistorialScreen() {
     val navController = rememberNavController()
-    HistorialUI(navController)
+    HistorialUI(usuario = "1", navController)
 }

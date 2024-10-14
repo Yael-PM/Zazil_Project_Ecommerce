@@ -124,7 +124,6 @@ fun ProductoListScreen(productoVM: ProductoVM = viewModel(), navController: NavC
                         descripcion = producto.descripcion,
                         navController = navController
                     )
-                    println(producto.ruta_img)
                 }
 
             }

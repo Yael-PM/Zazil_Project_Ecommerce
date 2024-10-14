@@ -1,5 +1,6 @@
 package com.ypm.zazil_project_ecommerce
 
+import ComunidadUI
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -45,7 +46,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ypm.zazil_project_ecommerce.ui.theme.Zazil_Project_EcommerceTheme
 import com.ypm.zazil_project_ecommerce.view.CarritoUI
-import com.ypm.zazil_project_ecommerce.view.ComunidadUI
 import com.ypm.zazil_project_ecommerce.view.ConocenosUI
 import com.ypm.zazil_project_ecommerce.view.CuentaUI
 import com.ypm.zazil_project_ecommerce.view.DetalleUI
@@ -87,8 +87,9 @@ fun NavegacionRutasLogin(
         composable(RutasNav.LOGIN){
             IniciarSesionScreen(navController, LoginVM())
         }
-        composable(RutasNav.HOME){
-            HomeUI(navController)
+        composable(RutasNav.HOME){ backStackEntry ->
+            val usuario = backStackEntry.arguments?.getString("id")
+            HomeUI(usuario, navController)
         }
         composable(RutasNav.REGISTRO){
             RegistroUI(navController, RegistroVM())
@@ -97,7 +98,8 @@ fun NavegacionRutasLogin(
             ForgotPassUI(navController)
         }
         composable(RutasNav.HISTORIAL){
-            HistorialUI(navController)
+            val usuario = it.arguments?.getString("id")
+            HistorialUI(usuario, navController)
         }
         composable(RutasNav.PERFIL){
             val usuario = it.arguments?.getString("id")
@@ -110,12 +112,13 @@ fun NavegacionRutasLogin(
             TiendaUI(navController)
         }
         composable(RutasNav.CARRITO){
-            CarritoUI(navController)
+            val usuario = it.arguments?.getString("id")
+            CarritoUI(usuario, navController)
         }
         composable(RutasNav.CONOCENOS){
             ConocenosUI(navController)
         }
-        composable(RutasNav.DESTALLES){
+        composable(RutasNav.DETALLES){
             val producto = it.arguments?.getString("id")
             DetalleUI(producto, navController)
         }
@@ -130,8 +133,6 @@ fun IniciarSesionScreen(navController: NavController = rememberNavController(), 
     val correoError: String? by viewModel.correoError.observeAsState(null)
     val passwordError: String? by viewModel.passwordError.observeAsState(null)
     val loginEnable: Boolean by viewModel.loginEnabled.observeAsState(false)
-    val loginResponse by viewModel.loginResponse.observeAsState()
-    val loginError by viewModel.loginError.observeAsState()
     var check by remember { mutableStateOf(true) }
 
     Column(

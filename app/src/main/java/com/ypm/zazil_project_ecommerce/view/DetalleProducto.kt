@@ -100,7 +100,7 @@ fun DetalleUI(id: String?, navController: NavHostController){
                                         .border(shape = RoundedCornerShape(12.dp), width = 1.dp, color = Color.White)
                                 ){
                                     AsyncImage(
-                                        model = "http://187.145.186.58:4000/api/imagenes/" + it.ruta_img,
+                                        model = "http://10.48.65.115:4000/api/imagenes/" + it.ruta_img,
                                         contentDescription = "zail",
                                         modifier = Modifier
                                             .fillMaxSize()

@@ -12,7 +12,7 @@ class ControladorServicioAPI {
     // Configuración de Retrofit
     private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("http://187.145.186.58:4000/") // URL base de la API
+            .baseUrl("http://10.48.65.115:4000/") // URL base de la API
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

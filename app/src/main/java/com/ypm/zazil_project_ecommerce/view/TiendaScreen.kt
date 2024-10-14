@@ -116,7 +116,7 @@ fun ProductoListScreen(productoVM: ProductoVM = viewModel(), navController: NavC
                     CardStore(
                         // La imagen está en proceso de mostrarse
                         id = producto.id_producto,
-                        imagen = "http://187.145.186.58:4000/api/imagenes/" + producto.ruta_img,
+                        imagen = "http://10.48.65.115:4000/api/imagenes/" + producto.ruta_img,
                         nombre = producto.nombre_producto,
                         precio = producto.precio.toString(),
                         rating = producto.rating,

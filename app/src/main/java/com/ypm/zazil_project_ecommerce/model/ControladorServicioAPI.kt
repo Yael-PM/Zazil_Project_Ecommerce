@@ -1,5 +1,6 @@
 package com.ypm.zazil_project_ecommerce.model
 
+import com.ypm.zazil_project_ecommerce.model.dataAPI.AddCarritoAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginRequest
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginResponse
 import com.ypm.zazil_project_ecommerce.model.dataAPI.ProductosAPI
@@ -57,38 +58,54 @@ class ControladorServicioAPI {
             .build()
     }
 
-    /**
+    /**************************************************
      * SERVICIOS GET PARA OBTENER INFORMACIÓN DE LA API
-     **/
+     **************************************************/
     private val servicioGET by lazy {
         retrofit.create(ServicioGETAPI::class.java)
     }
 
-    // Método para obtener la lista de productos
+    /**
+     * Obtiene la lista de productos con una petición a la API
+     * @return lista de productos: List<ProductosAPI>
+     **/
     suspend fun obtenerListaProductos(): List<ProductosAPI> {
         return servicioGET.obtenerListaProductos()
     }
 
-    //Método para obtener el detalle de un producto
+    /**
+     * Obtiene la infomación de un solo producto
+     * @param id: String que contiene el id del producto
+     * @return producto: ProductosAPI que contiene la información del producto
+     * */
     suspend fun obtenerProducto(id: String): ProductosAPI {
         val producto = servicioGET.obtenerProducto(id)
         return producto
     }
 
-    //Método para obtener el perfil de un usuario
+    /**
+     * Obtiene la infomación de un usuario para mostrarse en home y perfil
+     * @param id: String que contiene el id del usuario
+     * @return usuario: UsuariosAPI que contiene la información del usuario
+     * */
     suspend fun obtenerUsuario(id: String): UsuariosAPI {
         val usuario = servicioGET.obtenerUsuario(id)
         return usuario
     }
 
-    /**
+    /***************************************************
      * SERVICIOS POST PARA OBTENER INFORMACIÓN DE LA API
-     **/
+     ***************************************************/
     private val servicioPOST by lazy {
         retrofit.create(ServicioPOSTAPI::class.java)
     }
 
-    // Método para iniciar sesión con correo y contraseña con una petición POST
+    /**
+     * Función que verifica si el usuario esta registradito en la API
+     * @param correo: String que contiene el correo del usuario
+     * @param password: String que contiene la contraseña del usuario
+     * @return Response<LoginResponse>: Objeto que contiene la respuesta de la API
+     * */
     suspend fun login(correo: String, password: String): Response<LoginResponse> {
         val usuario = LoginRequest(
             email = correo,
@@ -97,7 +114,17 @@ class ControladorServicioAPI {
         return servicioPOST.verificarUsuario(usuario)
     }
 
-    // Método para registrar un nuevo usuario con una petición POST
+    /**
+     * Función que registra un usuario en la API
+     * @param nombre: String que contiene el nombre del usuario
+     * @param apellidoPaterno: String que contiene el apellido paterno del usuario
+     * @param apellidoMaterno: String que contiene el apellido materno del usuario
+     * @param correo: String que contiene el correo del usuario
+     * @param password: String que contiene la contraseña del usuario
+     * @param tipoUsuario: String que contiene el tipo de usuario
+     * @param estatus: String que contiene el estatus del usuario
+     * @return Response<UsuariosAPI>: Objeto que contiene la respuesta de la API
+     * */
     suspend fun register(
         nombre: String,
         apellidoPaterno: String,
@@ -123,5 +150,25 @@ class ControladorServicioAPI {
 
         // Envía la petición POST con el objeto usuario
         return servicioPOST.registrarUsuario(usuario)
+    }
+
+    /**
+     * Función que agrega un producto al carrito y por lo tanto lo crea en la BD
+     * @param id_usuario: String que contiene el id del usuario
+     * @param id_producto: String que contiene el id del producto
+     * @param cantidad: Int que contiene la cantidad del producto
+     * @return Response<AddCarrito>: Objeto que contiene la respuesta de la API
+     * */
+    suspend fun AddCarrito(
+        id_usuario: String,
+        id_producto: String,
+        cantidad: Int
+    ): Response<AddCarritoAPI> {
+        val carrito = AddCarritoAPI(
+            id_usuario = 999,
+            id_producto = 999,
+            cantidad = 999
+        )
+        return servicioPOST.addCarrito(carrito)
     }
 }

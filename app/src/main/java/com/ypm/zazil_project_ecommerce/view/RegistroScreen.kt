@@ -1,6 +1,7 @@
 package com.ypm.zazil_project_ecommerce.view
 
-import android.widget.Toast
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,12 +12,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -37,10 +44,27 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ypm.zazil_project_ecommerce.viewmodel.RegistroVM
 import com.ypm.zazil_project_ecommerce.viewmodel.RutasNav
+import java.util.Calendar
 
+
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistroUI(navController: NavController, viewModel: RegistroVM) {
 
+    // Estado para habilitar/deshabilitar los campos
+    var isEditable by remember { mutableStateOf(false) }
+    val datePickerState = remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+
+    val datePickerDialog = DatePickerDialog( context,
+        { _, year, month, dayOfMonth ->
+            datePickerState.value = "$dayOfMonth/${month + 1}/$year" // se actualiza la fecha selecccionada
+        }, 2024, 10, 1 // ejemplo
+    )
+
+    // Variables de los campos de entrada
     val nombre by viewModel.nombre.observeAsState("")
     val apellidoPaterno by viewModel.apellidoPaterno.observeAsState("")
     val apellidoMaterno by viewModel.apellidoMaterno.observeAsState("")
@@ -56,9 +80,10 @@ fun RegistroUI(navController: NavController, viewModel: RegistroVM) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .background(Color(0xFFD22973)),  // Color rosa de fondo
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Top,
     ) {
         // Parte superior rosa con el nombre "Zazil"
         Box(
@@ -193,6 +218,22 @@ fun RegistroUI(navController: NavController, viewModel: RegistroVM) {
                         color = Color.Red
                     )
                 }
+
+                // Campo de fecha de nacimiento
+                OutlinedTextField(
+                    value = datePickerState.value.ifEmpty { "dd/mm/aaaa" },  // Show placeholder if no date is selected
+                    onValueChange = {},
+                    label = { Text("Fecha de Nacimiento") },
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .clickable {
+                            if (isEditable) {
+                                datePickerDialog.show() // Show date picker dialog when editable
+                            }
+                        },
+                    enabled = isEditable,
+                    readOnly = true // Prevent typing, only allow date picking via dialog
+                )
 
                 // Enlace de sesión
                 Text(

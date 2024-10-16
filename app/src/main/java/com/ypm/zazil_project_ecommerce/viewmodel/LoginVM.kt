@@ -78,19 +78,18 @@ class LoginVM: ViewModel() {
         correo: String,
         password: String,
         navController: NavController,
+        cuentaVM: CuentaVM
     ){
         viewModelScope.launch {
             try{
                 val response = controlador.login(correo, password)
+
                 if(response.isSuccessful){
                     response.body()?.let{
                         loginResponse.value = it
-                        if (it.id_usuario != null){
-                            navController.navigate("home/${it.id_usuario}")
-                            Toast.makeText(navController.context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
-                        }else{
-                            Toast.makeText(navController.context, "No hay ID", Toast.LENGTH_SHORT).show()
-                        }
+
+                        navController.navigate("home/${it.id_usuario}")
+                        Toast.makeText(navController.context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
 
                         if (!it.status_login){
                             loginError.value = it.status_login.toString()

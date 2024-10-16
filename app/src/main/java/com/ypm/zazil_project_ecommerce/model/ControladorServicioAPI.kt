@@ -4,15 +4,55 @@ import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginRequest
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginResponse
 import com.ypm.zazil_project_ecommerce.model.dataAPI.ProductosAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.UsuariosAPI
+import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
+
+fun getUnsafeOkHttpClient(): OkHttpClient {
+    try {
+        // Crea un TrustManager que acepte todos los certificados
+        val trustAllCerts = arrayOf<TrustManager>(
+            object : X509TrustManager {
+                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
+                }
+
+                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+                }
+
+                override fun getAcceptedIssuers(): Array<X509Certificate> {
+                    return arrayOf()
+                }
+            }
+        )
+
+        // Crea un contexto SSL con nuestro TrustManager que acepta todos los certificados
+        val sslContext = SSLContext.getInstance("SSL")
+        sslContext.init(null, trustAllCerts, java.security.SecureRandom())
+
+        // Construye un OkHttpClient que acepta todos los certificados
+        val builder = OkHttpClient.Builder()
+        builder.sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+        builder.hostnameVerifier { _, _ -> true }
+
+        return builder.build()
+    } catch (e: Exception) {
+        throw RuntimeException(e)
+    }
+}
 
 class ControladorServicioAPI {
+    val cliente = getUnsafeOkHttpClient()
+
     // Configuración de Retrofit
     private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("http://10.48.65.115:4000/") // URL base de la API
+            .baseUrl("http://187.145.186.58:4000/") // URL base de la API
+            //.client(cliente)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -36,7 +76,7 @@ class ControladorServicioAPI {
     }
 
     //Método para obtener el perfil de un usuario
-    suspend fun obtenerUsuario(id: String): LoginResponse {
+    suspend fun obtenerUsuario(id: String): UsuariosAPI {
         val usuario = servicioGET.obtenerUsuario(id)
         return usuario
     }

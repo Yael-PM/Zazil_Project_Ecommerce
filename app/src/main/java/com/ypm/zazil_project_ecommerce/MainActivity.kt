@@ -2,6 +2,7 @@ package com.ypm.zazil_project_ecommerce
 
 import ComunidadUI
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -54,9 +55,11 @@ import com.ypm.zazil_project_ecommerce.view.HistorialUI
 import com.ypm.zazil_project_ecommerce.view.HomeUI
 import com.ypm.zazil_project_ecommerce.view.RegistroUI
 import com.ypm.zazil_project_ecommerce.view.TiendaUI
+import com.ypm.zazil_project_ecommerce.viewmodel.CuentaVM
 import com.ypm.zazil_project_ecommerce.viewmodel.LoginVM
 import com.ypm.zazil_project_ecommerce.viewmodel.RegistroVM
 import com.ypm.zazil_project_ecommerce.viewmodel.RutasNav
+import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,8 +90,8 @@ fun NavegacionRutasLogin(
         composable(RutasNav.LOGIN){
             IniciarSesionScreen(navController, LoginVM())
         }
-        composable(RutasNav.HOME){ backStackEntry ->
-            val usuario = backStackEntry.arguments?.getString("id")
+        composable(RutasNav.HOME){
+            val usuario = it.arguments?.getString("id")
             HomeUI(usuario, navController)
         }
         composable(RutasNav.REGISTRO){
@@ -266,7 +269,7 @@ fun IniciarSesionScreen(navController: NavController = rememberNavController(), 
                 // Botón "Iniciar sesión"
                 Button(
                     onClick = {
-                        viewModel.validarLogin(correo, password, navController)
+                        viewModel.validarLogin(correo, password, navController, CuentaVM())
                         //navController.navigate(RutasNav.HOME)
                     },
                     enabled = loginEnable,

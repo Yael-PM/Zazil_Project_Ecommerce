@@ -51,8 +51,7 @@ fun CardStore(
     stock: Int,
     navController: NavController
 ){
-    val carritoVM: CarritoVM = CarritoVM()
-    val botonCarrito = carritoVM.estadoCarrito
+
 
     Card(
 
@@ -153,14 +152,10 @@ fun CardStore(
                 }
             }
 
-            val addCarrito = false
-            var icono_carrito = R.drawable.car_icon_outline
             // FloatingActionButton en la esquina superior derecha
             FloatingActionButton(
                 onClick = {
-                    if (addCarrito) {
-                        //Aquí va el estado del carrito
-                    }
+                    //controladorCarrito(id, nombre, precio, stock, imagen)
                 },
                 modifier = Modifier
                     .size(40.dp)
@@ -170,7 +165,7 @@ fun CardStore(
                 contentColor = Color.White
             ) {
                 Icon(
-                    painter = painterResource(icono_carrito), // Icono para el botón
+                    painter = painterResource(R.drawable.car_icon_fill), // Icono para el botón
                     contentDescription = "añadir a carrito"
                 )
             }

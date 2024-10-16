@@ -1,12 +1,15 @@
 package com.ypm.zazil_project_ecommerce.viewmodel
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.ypm.zazil_project_ecommerce.model.ControladorServicioAPI
-import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginResponse
+import com.ypm.zazil_project_ecommerce.model.dataAPI.UsuariosAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -16,8 +19,8 @@ class CuentaVM: ViewModel() {
     private val controlador = ControladorServicioAPI()
 
     // Variable que recupera la lista de datos del usuario
-    private val _usuario = MutableStateFlow(LoginResponse())
-    val usuario: StateFlow<LoginResponse> = _usuario
+    private val _usuario = MutableLiveData<UsuariosAPI?>()
+    val usuario: LiveData<UsuariosAPI?> = _usuario
 
     // Variable que recupera el nombre del usuario
     private val _nombre = MutableStateFlow("")
@@ -73,7 +76,14 @@ class CuentaVM: ViewModel() {
 
     fun obtenerUsuario(id: String) {
         viewModelScope.launch {
-            _usuario.value = controlador.obtenerUsuario(id)
+            try{
+                _usuario.value = controlador.obtenerUsuario(id)
+            }catch (e: Exception){
+                Log.d("Error", e.message.toString())
+            }
         }
+        Log.d("CuentaVM", "Datos descargados")
+        Log.d("CuentaVM", _usuario.value.toString())
     }
+
 }

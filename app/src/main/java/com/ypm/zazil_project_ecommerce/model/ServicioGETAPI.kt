@@ -34,6 +34,6 @@ interface ServicioGETAPI {
      * @return Un usuario de tipo [UsuariosAPI]
      **/
     @GET("api/usuario/{id}") //Endpoint de la API
-    suspend fun obtenerUsuario(@Path("id") id: String): LoginResponse
+    suspend fun obtenerUsuario(@Path("id") id: String): UsuariosAPI
 
 }

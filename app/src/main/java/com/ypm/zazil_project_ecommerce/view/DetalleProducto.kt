@@ -38,11 +38,12 @@ import coil.compose.AsyncImage
 import com.ypm.zazil_project_ecommerce.R
 import com.ypm.zazil_project_ecommerce.view.Modifiers.customBackgrond
 import com.ypm.zazil_project_ecommerce.view.components.BottomBar
+import com.ypm.zazil_project_ecommerce.viewmodel.CarritoVM
 import com.ypm.zazil_project_ecommerce.viewmodel.ProductoVM
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DetalleUI(id: String?, navController: NavHostController){
+fun DetalleUI(id: String?, navController: NavHostController, carritoVM: CarritoVM = CarritoVM()){
     val productoVM: ProductoVM = viewModel()
     val infoProducto = productoVM.producto.collectAsState().value
 
@@ -51,7 +52,7 @@ fun DetalleUI(id: String?, navController: NavHostController){
     }
 
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(id, navController = navController)}
     ){ innerPadding ->
         infoProducto.let {
             Box(
@@ -100,7 +101,7 @@ fun DetalleUI(id: String?, navController: NavHostController){
                                         .border(shape = RoundedCornerShape(12.dp), width = 1.dp, color = Color.White)
                                 ){
                                     AsyncImage(
-                                        model = "http://10.48.65.115:4000/api/imagenes/" + it.ruta_img,
+                                        model = "http://187.145.186.58:4000/api/imagenes/" + it.ruta_img,
                                         contentDescription = "zail",
                                         modifier = Modifier
                                             .fillMaxSize()
@@ -119,7 +120,7 @@ fun DetalleUI(id: String?, navController: NavHostController){
                                 modifier = Modifier
                                     .padding(16.dp)
                                     .width(90.dp),
-                                onClick = { /*TODO*/ },
+                                onClick = { /**/ },
                             ){
                                 Text(
                                     text = "$" +  it.precio.toString(),
@@ -133,21 +134,9 @@ fun DetalleUI(id: String?, navController: NavHostController){
                                 containerColor = Color(0xFF5885C6),
                                 modifier = Modifier
                                     .padding(16.dp),
-                                onClick = { /*TODO*/ },
-                            ){
-                                Icon(
-                                    painter = painterResource(id = R.drawable.car_icon_fill),
-                                    contentDescription = "car",
-                                    tint = Color.White,
-
-                                    )
-                            }
-
-                            FloatingActionButton(
-                                containerColor = Color(0xFF5885C6),
-                                modifier = Modifier
-                                    .padding(16.dp),
-                                onClick = { /*TODO*/ },
+                                onClick = {
+                                    carritoVM.addCarrito(it.id_producto, id, 1, navController)
+                                },
                             ){
                                 Icon(
                                     painter = painterResource(id = R.drawable.car_icon_fill),
@@ -169,25 +158,6 @@ fun DetalleUI(id: String?, navController: NavHostController){
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ){
-                            Text(
-                                text = "Calificación: ${it.rating.toString()}",
-                                color = Color.Black,
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Icon(
-                                painter = painterResource(id = R.drawable.star_completa_icon),
-                                contentDescription = "star",
-                                tint = Color.Yellow,
-                                modifier = Modifier
-                                    .size(22.dp)
-                            )
-                        }
                     }
                     Column(
                         modifier = Modifier
@@ -199,9 +169,9 @@ fun DetalleUI(id: String?, navController: NavHostController){
                             fontWeight = FontWeight.Bold,
                             fontSize = 25.sp
                         )
-                        Text(text = it.descripcion)
+                        Text(text = it.descripcion, color = Color.Black)
                     }
-                    Spacer(modifier = Modifier.height(26.dp))
+                    Spacer(modifier = Modifier.height(50.dp))
                 }
             }
         }

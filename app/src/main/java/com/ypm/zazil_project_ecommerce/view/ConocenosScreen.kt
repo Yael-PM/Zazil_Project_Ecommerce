@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
@@ -37,14 +39,15 @@ import com.ypm.zazil_project_ecommerce.viewmodel.RutasNav
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ConocenosUI(navController: NavController) {
+fun ConocenosUI(usuario: String?, navController: NavController) {
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(usuario, navController) }
     ) {
         Column(
             modifier = Modifier
                 .background(Color.White)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // Rectángulo rosa de foro y quienes somos
@@ -60,7 +63,7 @@ fun ConocenosUI(navController: NavController) {
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Button(
-                            onClick = { navController.navigate(RutasNav.COMUNIDAD) },
+                            onClick = { navController.navigate("comunidad/${usuario}") },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD22973))
                         ) {
                             Text("Foro", color = Color.White, fontSize = 20.sp)
@@ -73,7 +76,7 @@ fun ConocenosUI(navController: NavController) {
                     ) {
                         // Botón Quienes somos con línea abajo
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Conocenos", color = Color.White, fontSize = 20.sp)
+                            Text("Conócenos", color = Color.White, fontSize = 20.sp)
                             Spacer(modifier = Modifier.height(4.dp)) // Espacio entre texto línea
                             Box(
                                 modifier = Modifier
@@ -116,17 +119,33 @@ fun ConocenosUI(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 MisionPost(
-                    title = "* Misión",
+                    title = "Misión\n\n" +
+                            "En Zazil, no solo estamos redefiniendo la\n" +
+                            "menstruación, sino también el impacto que tiene en\n" +
+                            "la economía y el medio ambiente. Nuestra misión es\n" +
+                            "empoderar a las mujeres a tomar decisiones\n" +
+                            "informadas sobre su salud menstrual mientras\n" +
+                            "generan un impacto positivo en su bienestar\n" +
+                            "financiero y en el planeta.",
                     backgroundColor = Color(0xFFE0E0E0),
                     isTitle = false
                 )
                 MisionPost(
-                    title = "* Visión",
+                    title = "Visión\n\n" +
+                            "Imaginamos un mundo donde la menstruación no\n" +
+                            "solo es sostenible para el planeta, sino también\n" +
+                            "empoderadora para todas las mujeres. Queremos\n" +
+                            "que cada elección consciente de Zazil contribuya a la\n" +
+                            "creación de comunidades fuertes, mujeres\n" +
+                            "empoderadas económicamente y un entorno más\n" +
+                            "saludable y equitativo. Nuestra visión es que Zazil no\n" +
+                            "sea solo un producto, sino una fuerza positiva que\n" +
+                            "transforma la forma en que vivimos la menstruación\n" +
+                            "promoviendo el bienestar personal y global\n",
                     backgroundColor = Color(0xFFE0E0E0),
                     isTitle = false
                 )
             }
-
 
             Spacer(modifier = Modifier.height(1.dp))
             Text(
@@ -145,11 +164,25 @@ fun ConocenosUI(navController: NavController) {
 
             // Tarjeta de Dato
             InfoPost(
-                data = "Info del dato",
+                data = "\"La producción y eliminación de toallas sanitarias contribuye significativamente a la huella de carbono. Por ejemplo, una toalla sanitaria puede emitir alrededor de 397.8 kg de CO2eq durante su ciclo de vida.\"",
                 backgroundColor = Color(0xFFE0E0E0),
                 isData = false
             )
-            Spacer(modifier = Modifier.height(20.dp))
+
+            Spacer(modifier = Modifier.height(2.dp))
+            DatoPost(
+                title = "Dato",
+                backgroundColor = Color(0xFFD22973),
+                isTitle = true
+            )
+
+            // Tarjeta de Dato
+            InfoPost(
+                data = "Un estudio publicado en la revista Nature reveló que los residuos de toallas sanitarias son una fuente significativa de contaminación. Estos residuos contribuyen a la contaminación del suelo y el agua, y a la formación de la gran isla en el Pacífico",
+                backgroundColor = Color(0xFFE0E0E0),
+                isData = false
+            )
+            Spacer(modifier = Modifier.height(80.dp))
 
         }
     }
@@ -191,7 +224,6 @@ fun DescripcionPost(data: String, backgroundColor: Color, isData: Boolean) {
 
         Column {
             Text(
-                fontWeight = FontWeight.Bold,
                 text = data,
                 fontSize = 14.sp,
                 color = if (isData) Color.White else Color.Black
@@ -205,17 +237,19 @@ fun DescripcionPost(data: String, backgroundColor: Color, isData: Boolean) {
 fun MisionPost(title: String, backgroundColor: Color, isTitle: Boolean) {
     Row(
         modifier = Modifier
-            .width(150.dp)
-            .height(150.dp)
+            .width(160.dp)
+            .height(250.dp)
             .background(backgroundColor, shape = RoundedCornerShape(12.dp))
             .border(5.dp, Color(0xFF5885C6), shape = RoundedCornerShape(12.dp))
             .padding(10.dp),
     ) {
         Spacer(modifier = Modifier.size(12.dp))
 
-        Column {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+        ) {
             Text(
-                fontWeight = FontWeight.Bold,
                 text = title,
                 fontSize = 14.sp,
                 color = if (isTitle) Color.White else Color.Black
@@ -228,7 +262,7 @@ fun DatoPost(title: String, backgroundColor: Color, isTitle: Boolean) {
     Column(
         modifier = Modifier
             .width(350.dp)
-            .height(50.dp)
+            .height(60.dp)
             .background(backgroundColor, shape = RoundedCornerShape(12.dp))
             .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -266,4 +300,11 @@ fun InfoPost(data: String, backgroundColor: Color, isData: Boolean) {
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ConocenosScreenPreview() {
+    val navController = rememberNavController()
+    ConocenosUI(usuario = "Juan Pérez", navController)
 }

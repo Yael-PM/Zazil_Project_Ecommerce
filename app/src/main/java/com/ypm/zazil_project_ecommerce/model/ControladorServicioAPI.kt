@@ -1,11 +1,17 @@
 package com.ypm.zazil_project_ecommerce.model
 
+import com.ypm.zazil_project_ecommerce.model.dataAPI.ActualizarCarritoAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.AddCarritoAPI
+import com.ypm.zazil_project_ecommerce.model.dataAPI.BannesrAPI
+import com.ypm.zazil_project_ecommerce.model.dataAPI.CarritoAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginRequest
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginResponse
+import com.ypm.zazil_project_ecommerce.model.dataAPI.PreguntasAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.ProductosAPI
+import com.ypm.zazil_project_ecommerce.model.dataAPI.RespuestasAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.UsuariosAPI
 import okhttp3.OkHttpClient
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -52,7 +58,7 @@ class ControladorServicioAPI {
     // Configuración de Retrofit
     private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("http://187.145.186.58:4000/") // URL base de la API
+            .baseUrl("http://189.139.200.234:4000/") // URL base de la API
             //.client(cliente)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -91,6 +97,39 @@ class ControladorServicioAPI {
     suspend fun obtenerUsuario(id: String): UsuariosAPI {
         val usuario = servicioGET.obtenerUsuario(id)
         return usuario
+    }
+
+    /**
+     * Función que obtiene el carrito con la lista de productos agregados
+     * @param id: String que contiene el id del usuario al que se le asocia ese carrito
+     * @return carrito: Objeto que contiene la respuesta de la API
+     **/
+    suspend fun obtenerListaCarrito(id: String): List<CarritoAPI> {
+        val carrito = servicioGET.obtenerCarrito(id)
+        return carrito
+    }
+
+    /**
+     * Función que obtiene la lista de banners para mostrar en la tienda
+     * @return banners: Objeto que contiene la lista de banners
+     **/
+    suspend fun obtenerListaBanners(): List<BannesrAPI> {
+        val banners = servicioGET.obtenerBanners()
+        return banners
+    }
+
+    /**
+     * Función que muestra al carrito como completado para poder pagar
+     * @param id_usuario: String que contiene el id del usuario
+     * @return carritoCompletado: Boolean que contiene el estado del carrito:
+     **/
+    suspend fun carritoCompletado(id_usuario: String): Boolean {
+        val carritoCompletado = servicioGET.carritoCompletado(id_usuario)
+        return carritoCompletado
+    }
+
+    suspend fun obtenerListaRespuestas(): List<RespuestasAPI> {
+        return servicioGET.obtenerRespuesta()
     }
 
     /***************************************************
@@ -140,9 +179,8 @@ class ControladorServicioAPI {
             nombre = nombre,
             apellido_paterno = apellidoPaterno,
             apellido_materno = apellidoMaterno,
-            f_nacimiento = "10/10/2001",
             tipo_usuario = tipoUsuario, // Valor por defecto
-            estatus = estatus, // Valor por defecto
+            estatus_usuario = estatus, // Valor por defecto
             email = correo,
             ruta_img = "img", // Si no tienes imagen, puedes dejarlo vacío para luego modificarla en el perfil
             password = password
@@ -162,13 +200,75 @@ class ControladorServicioAPI {
     suspend fun AddCarrito(
         id_usuario: String,
         id_producto: String,
-        cantidad: Int
+        cantidad: String
     ): Response<AddCarritoAPI> {
         val carrito = AddCarritoAPI(
-            id_usuario = 999,
-            id_producto = 999,
-            cantidad = 999
+            id_usuario = id_usuario,
+            id_producto = id_producto,
+            cantidad = cantidad
         )
         return servicioPOST.addCarrito(carrito)
+    }
+
+    suspend fun addPregunta(
+        id_usuario: String,
+        titulo: String,
+    ): Response<PreguntasAPI> {
+        val pregunta = PreguntasAPI(
+            id_usuario = id_usuario,
+            titulo = titulo,
+        )
+        return servicioPOST.addPregunta(pregunta)
+    }
+
+    /**************************************************
+     * SERVICIOS DELETE PARA BORRAR INFORMACIÓN DE LA API
+     **************************************************/
+    private val servicioDELETE by lazy {
+        retrofit.create(ServicioDELETEAPI::class.java)
+    }
+
+    suspend fun borrarProductoCarrito(
+        id_carrito: String,
+        id_producto_carrito: String
+    ): Response<Void> {
+        return servicioDELETE.borrarProductoCarrito(id_carrito, id_producto_carrito)
+    }
+
+    /**************************************************
+     * SERVICIOS PUT PARA OBTENER INFORMACIÓN DE LA API
+     **************************************************/
+    private val servicioPUT by lazy {
+        retrofit.create(ServicioPUTAPI::class.java)
+    }
+
+    suspend fun actualizarCantidad(
+        id_carrito: String,
+        id_producto_carrito: String,
+        nuevaCantidad: Int // Pasar la nueva cantidad como parámetro
+    ): Response<Void> {
+        // Crear el objeto CarritoAPI con la nueva cantidad
+        val carritoActualizado = ActualizarCarritoAPI(
+            id_carrito = id_carrito,
+            id_producto_carrito = id_producto_carrito,
+            cantidad = nuevaCantidad // Asignar la nueva cantidad
+        )
+
+        // Llamar al servicio PUT
+        return servicioPUT.actualizarCantidad(id_carrito, id_producto_carrito, carritoActualizado)
+    }
+
+    suspend fun actualizarEstadoCarrito(
+        id_carrito: String
+    ): Response<Void>{
+        return servicioPUT.actualizarEstadoCarrito(id_carrito)
+    }
+
+    suspend fun actualizarUsuario(
+        id_usuario: String,
+        usuario: UsuariosAPI
+    ): Response<Void>{
+        val infoNuevaUsuario = servicioPUT.actualizarUsuario(id_usuario, usuario)
+        return infoNuevaUsuario
     }
 }

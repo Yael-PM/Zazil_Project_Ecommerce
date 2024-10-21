@@ -1,7 +1,10 @@
 package com.ypm.zazil_project_ecommerce.model
 
+import com.ypm.zazil_project_ecommerce.model.dataAPI.BannesrAPI
+import com.ypm.zazil_project_ecommerce.model.dataAPI.CarritoAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginResponse
 import com.ypm.zazil_project_ecommerce.model.dataAPI.ProductosAPI
+import com.ypm.zazil_project_ecommerce.model.dataAPI.RespuestasAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.UsuariosAPI
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -35,5 +38,21 @@ interface ServicioGETAPI {
      **/
     @GET("api/usuario/{id}") //Endpoint de la API
     suspend fun obtenerUsuario(@Path("id") id: String): UsuariosAPI
+
+
+    @GET("api/carrito/{id}") //Endpoint de la API"
+    suspend fun obtenerCarrito(@Path("id") id: String): List<CarritoAPI>
+
+    @GET("api/banners")
+    suspend fun obtenerBanners(): List<BannesrAPI>
+
+    @GET("api/carrito/{id_usuario}/completo")
+    suspend fun carritoCompletado(@Path("id_usuario") id_usuario: String): Boolean
+
+    @GET("api/carrito/{id_usuario/completoNP}")
+    suspend fun obtenerTotal(@Path ("id_usuario") id_usuario: String): Double
+
+    @GET("api/preguntas")
+    suspend fun obtenerRespuesta(): List<RespuestasAPI>
 
 }

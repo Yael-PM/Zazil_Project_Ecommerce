@@ -1,7 +1,6 @@
 package com.ypm.zazil_project_ecommerce.model.dataAPI
 
-data class Pedido(
+data class BannesrAPI(
     val id: Int,
-    val fecha: String,
-    val total: Double,
+    val nombre: String,
 )

@@ -3,6 +3,7 @@ package com.ypm.zazil_project_ecommerce.model
 import com.ypm.zazil_project_ecommerce.model.dataAPI.AddCarritoAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginRequest
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginResponse
+import com.ypm.zazil_project_ecommerce.model.dataAPI.PreguntasAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.UsuariosAPI
 import retrofit2.Response
 import retrofit2.http.Body
@@ -38,4 +39,9 @@ interface ServicioPOSTAPI {
     suspend fun addCarrito(
         @Body carrito: AddCarritoAPI
     ): Response<AddCarritoAPI>
+
+    @POST("api/preguntas")
+    suspend fun addPregunta(
+        @Body pregunta: PreguntasAPI
+    ): Response<PreguntasAPI>
 }

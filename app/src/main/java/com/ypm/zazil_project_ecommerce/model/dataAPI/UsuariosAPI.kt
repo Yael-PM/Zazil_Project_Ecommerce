@@ -6,9 +6,8 @@ data class UsuariosAPI(
     val nombre: String,
     val apellido_paterno: String,
     val apellido_materno: String,
-    val f_nacimiento: String,
     val tipo_usuario: String,
-    val estatus: String,
+    val estatus_usuario: String,
     val email: String,
     val ruta_img: String,
     val password: String
@@ -27,7 +26,6 @@ data class LoginResponse(
     val nombre: String,
     val apellido_paterno: String,
     val apellido_materno: String,
-    val f_nacimiento: String,
     val tipo_usuario: String,
     val estatus_usuario: String,
     val email: String,

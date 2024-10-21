@@ -19,8 +19,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,10 +44,11 @@ import com.ypm.zazil_project_ecommerce.viewmodel.RutasNav
 @Composable
 fun HomeUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaVM = viewModel()) {
 
-    val usuario by cuentaVM.usuario.observeAsState()
-    if (usuario == null) {
-        Toast.makeText(navController.context, "Usuario no nulo", Toast.LENGTH_SHORT).show()
-        cuentaVM.obtenerUsuario(usuarioID.toString())
+    val usuario by cuentaVM.usuario.collectAsState(initial = null)
+    var isEditable by remember { mutableStateOf(false) }
+
+    usuarioID?.let {
+        if (usuario == null) cuentaVM.obtenerUsuario(it)
     }
 
     Box(
@@ -64,7 +69,7 @@ fun HomeUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaVM 
                 contentAlignment = Alignment.Center
             ){
                 AsyncImage(
-                    model = "http://187.145.186.58:4000/api/imagenes_usuario/" + usuario?.ruta_img,
+                    model = "http://189.139.200.234:4000/api/imagenes_usuario/" + usuario?.ruta_img,
                     contentDescription = "Foto de perfil",
                     modifier = Modifier
                         .fillMaxSize()
@@ -103,7 +108,7 @@ fun HomeUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaVM 
                             painter = painterResource(id = R.drawable.store_icon_fill),
                             text = "Tienda",
                             Modifier.clickable(onClick = {
-                                navController.navigate(RutasNav.TIENDA)
+                                navController.navigate("tienda/${usuarioID}")
                             })
                         )
                         HomeButton(
@@ -131,7 +136,7 @@ fun HomeUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaVM 
                             painterResource(id = R.drawable.groups_icon_fill),
                             text = "Comunidad",
                             Modifier.clickable(onClick = {
-                                navController.navigate(RutasNav.COMUNIDAD)
+                                navController.navigate("comunidad/${usuarioID}")
                             })
                         )
                     }

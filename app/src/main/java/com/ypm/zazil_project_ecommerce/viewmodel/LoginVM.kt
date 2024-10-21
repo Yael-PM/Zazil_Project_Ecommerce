@@ -78,7 +78,6 @@ class LoginVM: ViewModel() {
         correo: String,
         password: String,
         navController: NavController,
-        cuentaVM: CuentaVM
     ){
         viewModelScope.launch {
             try{

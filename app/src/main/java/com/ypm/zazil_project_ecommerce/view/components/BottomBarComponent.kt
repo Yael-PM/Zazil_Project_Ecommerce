@@ -35,7 +35,7 @@ import com.ypm.zazil_project_ecommerce.viewmodel.RutasNav
 
 
 @Composable
-fun BottomBar(navController: NavController){
+fun BottomBar(usuarioID: String?, navController: NavController){
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val destinoActual = navBackStackEntry?.destination
@@ -65,7 +65,7 @@ fun BottomBar(navController: NavController){
                     painter_unselected = painterResource(id = R.drawable.list_icon_outline),
                     titulo = "Historial",
                     destinoActual = destinoActual,
-                    ruta = RutasNav.HISTORIAL,
+                    ruta = "historial/${usuarioID}",
                     navController = navController
                 )
 
@@ -74,7 +74,7 @@ fun BottomBar(navController: NavController){
                     painter_unselected = painterResource(id = R.drawable.person_icon_outline),
                     titulo = "Cuenta",
                     destinoActual = destinoActual,
-                    ruta = RutasNav.PERFIL,
+                    ruta = "perfil/${usuarioID}",
                     navController = navController
                 )
 
@@ -83,7 +83,7 @@ fun BottomBar(navController: NavController){
                     painter_unselected = painterResource(id = R.drawable.store_icon_outline),
                     titulo = "Tienda",
                     destinoActual = destinoActual,
-                    ruta = RutasNav.TIENDA,
+                    ruta = "tienda/${usuarioID}",
                     navController = navController
                 )
 
@@ -92,7 +92,7 @@ fun BottomBar(navController: NavController){
                     painter_unselected = painterResource(id = R.drawable.groups_icon_outline),
                     titulo = "Comunidad",
                     destinoActual = destinoActual,
-                    ruta = RutasNav.COMUNIDAD,
+                    ruta = "comunidad/${usuarioID}",
                     navController = navController
                 )
 
@@ -101,7 +101,7 @@ fun BottomBar(navController: NavController){
                     painter_unselected = painterResource(id = R.drawable.car_icon_outline),
                     titulo = "Carrito",
                     destinoActual = destinoActual,
-                    ruta = RutasNav.HOME,
+                    ruta = "carrito/${usuarioID}",
                     navController = navController
                 )
             }
@@ -144,9 +144,3 @@ fun ButtonBottomBar(
     }
 }
 
-@Preview
-@Composable
-fun PreviewBar(){
-    val navController = rememberNavController()
-    BottomBar(navController)
-}

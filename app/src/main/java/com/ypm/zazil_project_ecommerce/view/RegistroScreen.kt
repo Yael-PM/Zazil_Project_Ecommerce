@@ -220,20 +220,6 @@ fun RegistroUI(navController: NavController, viewModel: RegistroVM) {
                 }
 
                 // Campo de fecha de nacimiento
-                OutlinedTextField(
-                    value = datePickerState.value.ifEmpty { "dd/mm/aaaa" },  // Show placeholder if no date is selected
-                    onValueChange = {},
-                    label = { Text("Fecha de Nacimiento") },
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .clickable {
-                            if (isEditable) {
-                                datePickerDialog.show() // Show date picker dialog when editable
-                            }
-                        },
-                    enabled = isEditable,
-                    readOnly = true // Prevent typing, only allow date picking via dialog
-                )
 
                 // Enlace de sesión
                 Text(

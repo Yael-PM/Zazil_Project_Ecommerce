@@ -2,6 +2,7 @@ package com.ypm.zazil_project_ecommerce.view
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,6 +47,8 @@ import com.ypm.zazil_project_ecommerce.viewmodel.CuentaVM
 import java.util.Calendar
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -54,50 +57,29 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
 
-@Composable
-fun DatePickerField() {
-    var birthDate by remember { mutableStateOf("Fecha de nacimiento") }
-
-    // Variables para inicializar el DatePicker con la fecha
-    val calendar = Calendar.getInstance()
-    val year = calendar.get(Calendar.YEAR)
-    val month = calendar.get(Calendar.MONTH)
-    val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-    // Mostrar el DatePickerDialog al hacer clic
-    val datePickerDialog = DatePickerDialog(
-        LocalContext.current,
-        { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-            birthDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-        }, year, month, day
-    )
-
-    // El campo de texto que muestra el DatePickerDialog
-    Box(
-        modifier = Modifier
-            .fillMaxWidth(0.9f)
-            .background(Color.White)
-            .padding(16.dp)
-            .clickable { datePickerDialog.show() }
-    ) {
-        Text(text = birthDate, color = Color.Gray)
-    }
-}
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CuentaUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaVM = viewModel()) {
-    val usuario by cuentaVM.usuario.observeAsState()
+    val usuario by cuentaVM.usuario.collectAsState(initial = null)
     var isEditable by remember { mutableStateOf(false) }
 
-    if (usuario == null) {
-        cuentaVM.obtenerUsuario(usuarioID.toString())
+    usuarioID?.let {
+        if (usuario == null) cuentaVM.obtenerUsuario(it)
     }
 
+    // Image picker launcher
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri: Uri? ->
+            uri?.let {
+                cuentaVM.actualizarRutaImg(it.toString()) // Actualizar la ruta de imagen en ViewModel
+            }
+        }
+    )
+
     Scaffold(
-        bottomBar = { BottomBar(navController = navController)}
+        bottomBar = { BottomBar(usuarioID, navController = navController) }
     ) {
-        //Fondo
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -111,15 +93,15 @@ fun CuentaUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaV
                 modifier = Modifier.fillMaxSize()
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                //Foto de perfil circular
+
                 Box(
                     modifier = Modifier
                         .size(200.dp)
                         .border(2.dp, Color.White, CircleShape),
                     contentAlignment = Alignment.Center
-                ){
+                ) {
                     AsyncImage(
-                        model = "http://187.145.186.58:4000/api/imagenes_usuario/" + usuario?.ruta_img,
+                        model = "http://187.145.186.58:4000/api/imagenes_usuario/" + cuentaVM.rutaImg.collectAsState().value,
                         contentDescription = "Foto de perfil",
                         modifier = Modifier
                             .fillMaxSize()
@@ -129,9 +111,8 @@ fun CuentaUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaV
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Botón para editar la foto de perfil
                 Button(
-                    onClick = { /* Acción para editar la foto */ },
+                    onClick = { launcher.launch("image/*") },  // Lanza el selector de imagen
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .width(160.dp)
@@ -143,11 +124,10 @@ fun CuentaUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaV
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                // Caja blanca con bordes redondeados
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(800.dp)
+                        .height(700.dp)
                         .background(
                             Color.White,
                             shape = RoundedCornerShape(24.dp)
@@ -162,7 +142,7 @@ fun CuentaUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaV
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "${usuario?.nombre} ${usuario?.apellido_paterno} ${usuario?.apellido_materno}",
+                            text = "${usuario?.nombre ?: ""} ${usuario?.apellido_paterno ?: ""} ${usuario?.apellido_materno ?: ""}",
                             color = Color.Black,
                             fontSize = 30.sp,
                             modifier = Modifier.padding(vertical = 1.dp)
@@ -170,10 +150,11 @@ fun CuentaUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaV
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Campos de texto con isEditable para habilitar/deshabilitar
                         OutlinedTextField(
-                            value = usuario?.nombre.toString(),
-                            onValueChange = {},
+                            value = cuentaVM.nombre.collectAsState().value,
+                            onValueChange = {
+                                if (isEditable) cuentaVM.actualizarNombre(it)
+                            },
                             label = { Text("Nombre") },
                             modifier = Modifier.fillMaxWidth(0.9f),
                             enabled = isEditable,
@@ -182,9 +163,11 @@ fun CuentaUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaV
                         Spacer(modifier = Modifier.height(20.dp))
 
                         OutlinedTextField(
-                            value = usuario?.apellido_paterno.toString(),
-                            onValueChange = {},
-                            label = { Text("Apellido") },
+                            value = cuentaVM.apellidoPaterno.collectAsState().value,
+                            onValueChange = {
+                                if (isEditable) cuentaVM.actualizarApellidoPaterno(it)
+                            },
+                            label = { Text("Apellido Paterno") },
                             modifier = Modifier.fillMaxWidth(0.9f),
                             enabled = isEditable
                         )
@@ -192,9 +175,11 @@ fun CuentaUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaV
                         Spacer(modifier = Modifier.height(20.dp))
 
                         OutlinedTextField(
-                            value = usuario?.apellido_materno.toString(),
-                            onValueChange = {},
-                            label = { Text("Apellido") },
+                            value = cuentaVM.apellidoMaterno.collectAsState().value,
+                            onValueChange = {
+                                if (isEditable) cuentaVM.actualizarApellidoMaterno(it)
+                            },
+                            label = { Text("Apellido Materno") },
                             modifier = Modifier.fillMaxWidth(0.9f),
                             enabled = isEditable
                         )
@@ -202,73 +187,57 @@ fun CuentaUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaV
                         Spacer(modifier = Modifier.height(20.dp))
 
                         OutlinedTextField(
-                            value = usuario?.email.toString(),
-                            onValueChange = {},
+                            value = cuentaVM.email.collectAsState().value,
+                            onValueChange = {
+                                if (isEditable) cuentaVM.actualizarEmail(it)
+                            },
                             label = { Text("Email") },
                             modifier = Modifier.fillMaxWidth(0.9f),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                             enabled = isEditable
                         )
 
                         Spacer(modifier = Modifier.height(20.dp))
 
                         OutlinedTextField(
-                            value = usuario?.password.toString(),
+                            value = if ((cuentaVM.password.collectAsState().value).length > 6) "${cuentaVM.password.collectAsState().value.take(6)}..." else cuentaVM.password.collectAsState().value,
                             onValueChange = {},
                             label = { Text("Contraseña") },
                             modifier = Modifier.fillMaxWidth(0.9f),
                             visualTransformation = PasswordVisualTransformation(),
-                            enabled = isEditable
+                            enabled = false
                         )
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Botones de Editar y Guardar Cambios con FloatingActionButton
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            // FloatingActionButton para Editar
                             FloatingActionButton(
-                                onClick = { isEditable = true }, // Habilita los campos
-                                containerColor = Color(0xFF5885C6), // Color del FAB
+                                onClick = { isEditable = true },
+                                containerColor = Color(0xFF5885C6),
                                 modifier = Modifier
                                     .width(120.dp)
-                                    .height(35.dp),                        ) {
+                                    .height(35.dp)
+                            ) {
                                 Text("Editar", color = Color.White)
-
                             }
 
-                            // FloatingActionButton para Guardar Cambios que puede deshabilitarse
-                            Box(
-                                modifier = Modifier.size(120.dp), // Tamaño del boton
+                            FloatingActionButton(
+                                onClick = {
+                                    if (isEditable) {
+                                        cuentaVM.actualizarUsuario(usuarioID.toString())
+                                        isEditable = false
+                                    }
+                                },
+                                containerColor = if (isEditable) Color(0xFF5885C6) else Color.Gray,
+                                modifier = Modifier
+                                    .width(120.dp)
+                                    .height(35.dp)
                             ) {
-                                if (isEditable) {
-                                    FloatingActionButton(
-                                        onClick = { /* Acción de Guardar cambios */ },
-                                        containerColor = Color(0xFF5885C6), // Color 0xFF5885C6 cuando está habilitado
-                                        modifier = Modifier
-                                            .width(120.dp)
-                                            .height(45.dp),
-                                    ) {
-                                        Text("Guardar cambios", color = Color.White)
-
-                                    }
-                                } else {
-                                    // Mostrar FAB deshabilitado cuando isEditable es false
-                                    FloatingActionButton(
-                                        onClick = { /* deshabilitado */ },
-                                        containerColor = Color.Gray, // Color gris cuando está deshabilitado
-                                        modifier = Modifier
-                                            .width(120.dp)
-                                            .height(45.dp),
-                                    ) {
-                                        Text("Guardar cambios", color = Color.White)
-                                    }
-                                }
+                                Text("Guardar", color = Color.White)
                             }
                         }
-                        Spacer(modifier = Modifier.height(45.dp))
                     }
                 }
             }

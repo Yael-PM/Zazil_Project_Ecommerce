@@ -1,8 +1,6 @@
 package com.ypm.zazil_project_ecommerce.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.ypm.zazil_project_ecommerce.model.dataAPI.Pedido
-import com.ypm.zazil_project_ecommerce.model.dataAPI.Pregunta
 import com.ypm.zazil_project_ecommerce.model.dataAPI.ProductosAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,10 +26,10 @@ class SearchBarViewModel: ViewModel() {
 
     // Definimos la variable preguntas que guardará una lista de preguntas del foro
     // cuando se consulte desde la API
-    private val _preguntas = MutableStateFlow(listOf<Pregunta>())
+    //private val _preguntas = MutableStateFlow(listOf<Pregunta>())
 
     // Definimos la variable pedidos que guardará una lista de pedidos
     // cuando se consulte desde la API
-    private val _pedidos = MutableStateFlow(listOf<Pedido>())
+    //private val _pedidos = MutableStateFlow(listOf<Pedido>())
 
 }

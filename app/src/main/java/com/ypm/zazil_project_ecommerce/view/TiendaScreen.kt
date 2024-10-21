@@ -1,6 +1,7 @@
 package com.ypm.zazil_project_ecommerce.view
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,7 +44,7 @@ import com.ypm.zazil_project_ecommerce.viewmodel.ProductoVM
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TiendaUI(navController: NavController){
+fun TiendaUI(usuarioID: String?, navController: NavController){
 
     val banners = listOf(
         R.drawable.logo_zazil_prueba,
@@ -52,7 +53,7 @@ fun TiendaUI(navController: NavController){
     )
 
     Scaffold(
-        bottomBar = { BottomBar(navController = navController)}
+        bottomBar = { BottomBar(usuarioID, navController = navController)}
     ){ innerPadding ->
 
         Column(
@@ -74,13 +75,13 @@ fun TiendaUI(navController: NavController){
 
             BannerCarrusel(bannerItems = banners)
 
-            ProductoListScreen(navController = navController)
+            ProductoListScreen(usuarioID, navController = navController)
         }
     }
 }
 
 @Composable
-fun ProductoListScreen(productoVM: ProductoVM = viewModel(), navController: NavController) {
+fun ProductoListScreen(usuarioID: String?, productoVM: ProductoVM = viewModel(), navController: NavController) {
 
     val productos by productoVM.listaProductos.collectAsState()
     val descargando by productoVM.descargando.collectAsState()
@@ -115,8 +116,9 @@ fun ProductoListScreen(productoVM: ProductoVM = viewModel(), navController: NavC
                 item {
                     CardStore(
                         // La imagen está en proceso de mostrarse
-                        id = producto.id_producto,
-                        imagen = "http://10.48.65.115:4000/api/imagenes/" + producto.ruta_img,
+                        id_producto = producto.id_producto,
+                        id_usuario = usuarioID.toString(),
+                        imagen = "http://189.139.200.234:4000/api/imagenes/" + producto.ruta_img,
                         nombre = producto.nombre_producto,
                         precio = producto.precio.toString(),
                         rating = producto.rating,
@@ -125,7 +127,6 @@ fun ProductoListScreen(productoVM: ProductoVM = viewModel(), navController: NavC
                         navController = navController
                     )
                 }
-
             }
         }
     }
@@ -135,5 +136,5 @@ fun ProductoListScreen(productoVM: ProductoVM = viewModel(), navController: NavC
 @Composable
 fun PreviewTienda(){
     val navController = rememberNavController()
-    TiendaUI(navController)
+    TiendaUI("1", navController)
 }

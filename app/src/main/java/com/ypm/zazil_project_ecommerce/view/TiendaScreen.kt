@@ -46,12 +46,6 @@ import com.ypm.zazil_project_ecommerce.viewmodel.ProductoVM
 @Composable
 fun TiendaUI(usuarioID: String?, navController: NavController){
 
-    val banners = listOf(
-        R.drawable.logo_zazil_prueba,
-        R.drawable.star_completa_icon,
-        R.drawable.star_half_icon
-    )
-
     Scaffold(
         bottomBar = { BottomBar(usuarioID, navController = navController)}
     ){ innerPadding ->
@@ -73,7 +67,7 @@ fun TiendaUI(usuarioID: String?, navController: NavController){
 
             SearchBar()
 
-            BannerCarrusel(bannerItems = banners)
+            BannerCarrusel()
 
             ProductoListScreen(usuarioID, navController = navController)
         }

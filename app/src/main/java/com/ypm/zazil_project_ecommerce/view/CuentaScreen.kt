@@ -92,42 +92,14 @@ fun CuentaUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaV
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize()
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
 
-                Box(
-                    modifier = Modifier
-                        .size(200.dp)
-                        .border(2.dp, Color.White, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    AsyncImage(
-                        model = "http://187.145.186.58:4000/api/imagenes_usuario/" + cuentaVM.rutaImg.collectAsState().value,
-                        contentDescription = "Foto de perfil",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(CircleShape),
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Button(
-                    onClick = { launcher.launch("image/*") },  // Lanza el selector de imagen
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .width(160.dp)
-                        .height(35.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5885C6))
-                ) {
-                    Text("Editar foto", color = Color.White)
-                }
 
                 Spacer(modifier = Modifier.height(5.dp))
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(700.dp)
+                        .height(800.dp)
                         .background(
                             Color.White,
                             shape = RoundedCornerShape(24.dp)

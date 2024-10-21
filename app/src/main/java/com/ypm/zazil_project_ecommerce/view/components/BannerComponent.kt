@@ -2,7 +2,6 @@ package com.ypm.zazil_project_ecommerce.view.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.content.MediaType.Companion.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,29 +15,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
+import coil.compose.AsyncImage
+import com.ypm.zazil_project_ecommerce.viewmodel.ProductoVM
 
 @Composable
-fun BannerCarrusel(
-    bannerItems: List<Int>,  // Lista de imágenes (recursos drawables)
-    autoScrollDelay: Long = 3000L // Tiempo de scroll automático en milisegundos
-) {
-    var currentIndex by remember { mutableStateOf(0) }
+fun BannerCarrusel(productoVM: ProductoVM = ProductoVM()) {
+
+    val listaBanners by productoVM.listaBanners.collectAsState()
 
     // Efecto para el scroll automático
-    LaunchedEffect(currentIndex) {
-        delay(autoScrollDelay)
-        currentIndex = (currentIndex + 1) % bannerItems.size // Avanza al siguiente, vuelve al inicio
+    LaunchedEffect(Unit) {
+        productoVM.obtenerListaBanners()
     }
 
     Column(
@@ -50,15 +43,15 @@ fun BannerCarrusel(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
-            items(bannerItems) { item ->
-                BannerItem(imageRes = item)
+            items(listaBanners) { item ->
+                BannerItem(imageRes = item.ruta_banner)
             }
         }
     }
 }
 
 @Composable
-fun BannerItem(imageRes: Int) {
+fun BannerItem(imageRes: String) {
     Card(
         modifier = Modifier
             .padding(horizontal = 8.dp)
@@ -68,8 +61,8 @@ fun BannerItem(imageRes: Int) {
             .background(androidx.compose.ui.graphics.Color.Gray),
         shape = RoundedCornerShape(16.dp),
     ) {
-        Image(
-            painter = painterResource(id = imageRes),
+        AsyncImage(
+            model = "http://189.139.200.234:4000/api/banners/" + imageRes,
             contentDescription = "Imagen",
             modifier = Modifier.fillMaxSize()
         )

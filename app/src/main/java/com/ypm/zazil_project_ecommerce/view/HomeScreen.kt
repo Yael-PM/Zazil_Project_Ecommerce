@@ -61,28 +61,13 @@ fun HomeUI(usuarioID: String?, navController: NavController, cuentaVM: CuentaVM 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         )  {
-            Spacer(modifier = Modifier.height(20.dp))
-            Box(
-                modifier = Modifier
-                    .size(200.dp)
-                    .border(2.dp, Color.White, CircleShape),
-                contentAlignment = Alignment.Center
-            ){
-                AsyncImage(
-                    model = "http://189.139.200.234:4000/api/imagenes_usuario/" + usuario?.ruta_img,
-                    contentDescription = "Foto de perfil",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape),
-                )
-            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(700.dp)
+                    .height(800.dp)
                     .background(Color.White, shape = RoundedCornerShape(24.dp))
                     .padding(top = 54.dp),
                 contentAlignment = Alignment.TopCenter

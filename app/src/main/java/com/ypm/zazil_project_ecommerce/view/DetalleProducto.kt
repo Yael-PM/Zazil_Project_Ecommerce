@@ -101,7 +101,7 @@ fun DetalleUI(id: String?, navController: NavHostController, carritoVM: CarritoV
                                         .border(shape = RoundedCornerShape(12.dp), width = 1.dp, color = Color.White)
                                 ){
                                     AsyncImage(
-                                        model = "http://187.145.186.58:4000/api/imagenes/" + it.ruta_img,
+                                        model = "http://189.139.200.234:4000/api/imagenes/" + it.ruta_img,
                                         contentDescription = "zail",
                                         modifier = Modifier
                                             .fillMaxSize()
@@ -156,7 +156,8 @@ fun DetalleUI(id: String?, navController: NavHostController, carritoVM: CarritoV
                         Text(
                             text = "Stock: ${it.stock}",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
+                            fontSize = 20.sp,
+                            color = Color.Black
                         )
                     }
                     Column(
@@ -167,11 +168,12 @@ fun DetalleUI(id: String?, navController: NavHostController, carritoVM: CarritoV
                         Text(
                             text = "Descripción:",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 25.sp
+                            fontSize = 25.sp,
+                            color = Color.Black
                         )
                         Text(text = it.descripcion, color = Color.Black)
                     }
-                    Spacer(modifier = Modifier.height(50.dp))
+                    Spacer(modifier = Modifier.height(80.dp))
                 }
             }
         }

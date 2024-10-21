@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -61,7 +62,7 @@ fun CardStore(
         modifier = Modifier
             .customBackgrond(idColor = R.color.white)
             .width(180.dp)
-            .height(240.dp)
+            .height(210.dp)
             .border(shape = RoundedCornerShape(12.dp), width = 1.dp, color = Color.White),
         contentAlignment = Alignment.Center
     ){
@@ -99,39 +100,7 @@ fun CardStore(
                         }
                 )
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 5.dp, bottom = 5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ){
-                    Text(
-                        text = precio,
-                        color = Color.Black,
-                        fontSize = 16.sp
-                    )
-
-                    /*
-                    * Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = rating.toString(),
-                            color = Color.Black,
-                            fontSize = 16.sp
-                        )
-
-                        Icon(
-                            painter = painterResource(id = R.drawable.star_completa_icon),
-                            contentDescription = "star",
-                            tint = Color.Yellow,
-                            modifier = Modifier
-                                .size(18.dp)
-                        )
-                    }
-                    * */
-                }
-
+                Spacer(modifier = Modifier.height(5.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -139,15 +108,11 @@ fun CardStore(
                             color = Color(0xFFD22973),
                             shape = RoundedCornerShape(5.dp)
                         )
-                        .height(30.dp)
-                        .clickable {
-                            //Función que jala los elementos a la pantalla de pago
-
-                        },
+                        .height(30.dp),
                     contentAlignment = Alignment.Center
                 ){
                     Text(
-                        text = "Comprar",
+                        text = "$${precio}",
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )

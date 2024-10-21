@@ -4,6 +4,7 @@ import com.ypm.zazil_project_ecommerce.model.dataAPI.ActualizarCarritoAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.AddCarritoAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.BannesrAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.CarritoAPI
+import com.ypm.zazil_project_ecommerce.model.dataAPI.HistorialAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginRequest
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginResponse
 import com.ypm.zazil_project_ecommerce.model.dataAPI.PreguntasAPI
@@ -130,6 +131,10 @@ class ControladorServicioAPI {
 
     suspend fun obtenerListaRespuestas(): List<RespuestasAPI> {
         return servicioGET.obtenerRespuesta()
+    }
+
+    suspend fun obtenerHistorial(id_usuario: String): List<HistorialAPI> {
+        return servicioGET.obtenerHistorial(id_usuario)
     }
 
     /***************************************************

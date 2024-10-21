@@ -121,16 +121,18 @@ fun ComunidadUI(usuario: String?, navController: NavController, comunidadVM: Com
                     // Recordar el estado individual de cada pregunta
                     var showAnswer by remember { mutableStateOf(false) }
 
-                    CardPregunta(
-                        id_pregunta = respuesta.id_pregunta,
-                        id_usuario = respuesta.id_usuario,
-                        firstName = respuesta.firstName ?: "Desconocido",
-                        lastName = respuesta.lastName ?: "Desconocido",
-                        titulo = respuesta.titulo,
-                        id_usuario_respuesta = respuesta.id_usuario_respuesta,
-                        respuesta = respuesta.respuesta ?: "",
-                        fecha_respuesta = respuesta.fecha_respuesta,
-                    )
+                    if(respuesta != null){
+                        CardPregunta(
+                            id_pregunta = respuesta.id_pregunta,
+                            id_usuario = respuesta.id_usuario,
+                            firstName = respuesta.firstName ?: "Desconocido",
+                            lastName = respuesta.lastName ?: "Desconocido",
+                            titulo = respuesta.titulo,
+                            id_usuario_respuesta = respuesta.id_usuario_respuesta ?: "",
+                            respuesta = respuesta.respuesta ?: "",
+                            fecha_respuesta = respuesta.fecha_respuesta ?: "s.f.",
+                        )
+                    }
                 }
             }
 

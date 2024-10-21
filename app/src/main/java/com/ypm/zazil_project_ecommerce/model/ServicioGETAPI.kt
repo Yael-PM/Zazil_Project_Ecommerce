@@ -2,6 +2,7 @@ package com.ypm.zazil_project_ecommerce.model
 
 import com.ypm.zazil_project_ecommerce.model.dataAPI.BannesrAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.CarritoAPI
+import com.ypm.zazil_project_ecommerce.model.dataAPI.HistorialAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.LoginResponse
 import com.ypm.zazil_project_ecommerce.model.dataAPI.ProductosAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.RespuestasAPI
@@ -49,8 +50,8 @@ interface ServicioGETAPI {
     @GET("api/carrito/{id_usuario}/completo")
     suspend fun carritoCompletado(@Path("id_usuario") id_usuario: String): Boolean
 
-    @GET("api/carrito/{id_usuario/completoNP}")
-    suspend fun obtenerTotal(@Path ("id_usuario") id_usuario: String): Double
+    @GET("api/carrito/{id_usuario}/completoNP")
+    suspend fun obtenerHistorial(@Path ("id_usuario") id_usuario: String): List<HistorialAPI>
 
     @GET("api/preguntas")
     suspend fun obtenerRespuesta(): List<RespuestasAPI>

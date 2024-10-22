@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 
+// Clase para definir modificadores personalizados
 object Modifiers {
 
     @Composable

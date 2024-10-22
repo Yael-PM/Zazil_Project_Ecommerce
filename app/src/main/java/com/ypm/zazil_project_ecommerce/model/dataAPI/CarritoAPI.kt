@@ -1,11 +1,13 @@
 package com.ypm.zazil_project_ecommerce.model.dataAPI
 
+// Data class que representa la adición de un carrito nuevo
 data class AddCarritoAPI(
     val id_usuario: String,
     val id_producto: String,
     val cantidad: String,
 )
 
+// Data class que representa la info de un carrito proveniente de la API
 data class CarritoAPI(
     val id_carrito: Int,
     val estado: String,
@@ -21,6 +23,7 @@ data class CarritoAPI(
 
 )
 
+// Data class que representa una actualización del estado de un carrito
 data class ActualizarCarritoAPI(
     val id_carrito: String,
     val id_producto_carrito: String,

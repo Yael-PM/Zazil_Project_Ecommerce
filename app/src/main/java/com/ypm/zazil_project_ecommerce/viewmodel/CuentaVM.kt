@@ -1,28 +1,25 @@
 package com.ypm.zazil_project_ecommerce.viewmodel
 
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.ypm.zazil_project_ecommerce.model.ControladorServicioAPI
 import com.ypm.zazil_project_ecommerce.model.dataAPI.UsuariosAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+// ViewModel para gestionar la cuenta del usuario
 class CuentaVM : ViewModel() {
 
+    // Controlador para interactuar con el servicio de API
     private val controlador = ControladorServicioAPI()
 
-    // Cambia LiveData a StateFlow para manejar datos del usuario
+    // Estado del usuario, inicialmente nulo
     private val _usuario = MutableStateFlow<UsuariosAPI?>(null)
     val usuario: StateFlow<UsuariosAPI?> = _usuario
 
+    // Estado de los campos de usuario
     private val _nombre = MutableStateFlow("")
     val nombre: StateFlow<String> = _nombre
 
@@ -41,13 +38,18 @@ class CuentaVM : ViewModel() {
     private val _rutaImg = MutableStateFlow("")
     val rutaImg: StateFlow<String> = _rutaImg
 
+    /**
+     * Método para obtener los datos del usuario desde el backend
+     * @param id El ID del usuario a obtener
+     */
     fun obtenerUsuario(id: String) {
         viewModelScope.launch {
             try {
+                // Llama al controlador para obtener los datos del usuario
                 val usuarioData = controlador.obtenerUsuario(id)
                 _usuario.value = usuarioData
 
-                // Asignar los valores obtenidos a los respectivos StateFlows
+                // Asigna los valores obtenidos a los respectivos StateFlows
                 usuarioData?.let {
                     _nombre.value = it.nombre
                     _apellidoPaterno.value = it.apellido_paterno
@@ -57,12 +59,13 @@ class CuentaVM : ViewModel() {
                     _rutaImg.value = it.ruta_img
                 }
             } catch (e: Exception) {
+                // Captura y registra cualquier error ocurrido durante la obtención del usuario
                 Log.d("Error", e.message.toString())
             }
         }
     }
 
-    // Funciones para actualizar los valores de los campos editables
+    // Métodos para actualizar los valores de los campos editables
     fun actualizarNombre(nuevoNombre: String) {
         _nombre.value = nuevoNombre
     }
@@ -87,10 +90,14 @@ class CuentaVM : ViewModel() {
         _rutaImg.value = nuevaRutaImg
     }
 
-    // Función para guardar los cambios en el backend
+    /**
+     * Método para guardar los cambios del usuario en el backend
+     * @param usuarioID El ID del usuario a actualizar
+     */
     fun actualizarUsuario(usuarioID: String) {
         viewModelScope.launch {
             try {
+                // Crea una instancia de UsuariosAPI con los datos actualizados
                 val usuarioActualizado = UsuariosAPI(
                     id_usuario = _usuario.value?.id_usuario ?: 0,
                     nombre = _nombre.value,
@@ -102,6 +109,7 @@ class CuentaVM : ViewModel() {
                     ruta_img = _rutaImg.value,
                     password = _password.value
                 )
+                // Llama al controlador para actualizar los datos del usuario
                 val resultado = controlador.actualizarUsuario(usuarioID, usuarioActualizado)
                 if (resultado.isSuccessful) {
                     Log.d("CuentaVM", "Datos del usuario actualizados correctamente")
@@ -109,6 +117,7 @@ class CuentaVM : ViewModel() {
                     Log.e("CuentaVM", "Error al actualizar los datos del usuario: ${resultado.errorBody()}")
                 }
             } catch (e: Exception) {
+                // Captura y registra cualquier excepción ocurrida durante la actualización
                 Log.e("CuentaVM", "Excepción al actualizar los datos del usuario", e)
             }
         }

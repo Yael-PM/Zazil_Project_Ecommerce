@@ -129,10 +129,20 @@ class ControladorServicioAPI {
         return carritoCompletado
     }
 
+    /**
+     * Obtiene una lista de respuestas de la API.
+     * Esta función realiza una llamada a la API para recuperar una lista de respuestas.
+     * @return Una lista de objetos `RespuestasAPI` que representan las respuestas obtenidas en el foro
+     */
     suspend fun obtenerListaRespuestas(): List<RespuestasAPI> {
         return servicioGET.obtenerRespuesta()
     }
 
+    /**
+     * Obtiene una lista de historial de compras de la API.
+     * Esta función realiza una llamada a la API para recuperar una lista de historial de compras.
+     * @return Una lista de objetos `HistorialAPI` que representan el historial de compras
+     */
     suspend fun obtenerHistorial(id_usuario: String): List<HistorialAPI> {
         return servicioGET.obtenerHistorial(id_usuario)
     }
@@ -215,6 +225,11 @@ class ControladorServicioAPI {
         return servicioPOST.addCarrito(carrito)
     }
 
+    /**
+     * Función que agrega una pregunta al foro
+     * @param id_usuario: String que contiene el id del usuario
+     * @param titulo: String que contiene el titulo de la pregunta
+     **/
     suspend fun addPregunta(
         id_usuario: String,
         titulo: String,
@@ -233,6 +248,13 @@ class ControladorServicioAPI {
         retrofit.create(ServicioDELETEAPI::class.java)
     }
 
+    /**
+     * Elimina un producto específico de un carrito de compras.
+     * Esta función realiza una petición DELETE a la API para remover un producto del carrito identificado por su ID
+     * @param id_carrito El identificador único del carrito de compras.
+     * @param id_producto_carrito El identificador único del producto dentro del carrito.
+     * @return Una respuesta de tipo `Response<Void>` que indica el resultado de la operación.
+     */
     suspend fun borrarProductoCarrito(
         id_carrito: String,
         id_producto_carrito: String
@@ -247,6 +269,14 @@ class ControladorServicioAPI {
         retrofit.create(ServicioPUTAPI::class.java)
     }
 
+    /**
+     * Actualiza la cantidad de un producto en un carrito de compras.
+     * Esta función realiza una petición PUT a la API para modificar la cantidad de un producto específico dentro de un carrito.
+     * @param id_carrito El identificador único del carrito de compras.
+     * @param id_producto_carrito El identificador único del producto dentro del carrito.
+     * @param nuevaCantidad La nueva cantidad que se desea asignar al producto.
+     * @return Una respuesta de tipo `Response<Void>` que indica el resultado de la operación.
+     */
     suspend fun actualizarCantidad(
         id_carrito: String,
         id_producto_carrito: String,
@@ -263,12 +293,25 @@ class ControladorServicioAPI {
         return servicioPUT.actualizarCantidad(id_carrito, id_producto_carrito, carritoActualizado)
     }
 
+    /**
+     * Actualiza el estado de un carrito de compras.
+     * Esta función realiza una petición PUT a la API para cambiar el estado de un carrito (por ejemplo, de "en proceso" a "completado").
+     * @param id_carrito El identificador único del carrito de compras.
+     * @return Una respuesta de tipo `Response<Void>` que indica el resultado de la operación.
+     */
     suspend fun actualizarEstadoCarrito(
         id_carrito: String
     ): Response<Void>{
         return servicioPUT.actualizarEstadoCarrito(id_carrito)
     }
 
+    /**
+     * Actualiza la información de un usuario.
+     * Esta función realiza una petición PUT a la API para modificar los datos de un usuario.
+     * @param id_usuario El identificador único del usuario.
+     * @param usuario Un objeto de tipo `UsuariosAPI` que contiene la nueva información del usuario.
+     * @return Una respuesta de tipo `Response<Void>` que indica el resultado de la operación.
+     */
     suspend fun actualizarUsuario(
         id_usuario: String,
         usuario: UsuariosAPI

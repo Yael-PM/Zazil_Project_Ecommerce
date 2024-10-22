@@ -88,35 +88,70 @@ class RegistroVM: ViewModel() {
         _registroEnabled.value = campoValido(nombre, apellidoPaterno, apellidoMaterno) && correoValido(correo) && passwordValida(password)
     }
 
+    /**
+     * Verifica si los campos de nombre y apellidos son válidos.
+     *
+     * @param nombre El nombre del usuario.
+     * @param apellidoPaterno El apellido paterno del usuario.
+     * @param apellidoMaterno El apellido materno del usuario.
+     * @return `true` si todos los campos tienen al menos 3 caracteres, `false` de lo contrario.
+     */
     fun campoValido(nombre: String, apellidoPaterno: String, apellidoMaterno: String): Boolean {
         return (nombre.isNotEmpty() && nombre.length >= 3 && apellidoPaterno.isNotEmpty() && apellidoPaterno.length >= 3 && apellidoMaterno.isNotEmpty() && apellidoMaterno.length >= 3)
     }
 
+    /**
+     * Verifica si la contraseña es válida.
+     *
+     * @param password La contraseña del usuario.
+     * @return `true` si la contraseña tiene al menos 6 caracteres, `false` de lo contrario.
+     */
     fun passwordValida(password: String): Boolean {
         return password.length >= 6 && password.isNotEmpty()
     }
 
+    /**
+     * Verifica si el correo electrónico es válido.
+     *
+     * @param correo El correo electrónico del usuario.
+     * @return `true` si el formato del correo es válido, `false` de lo contrario.
+     */
     fun correoValido(correo: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(correo).matches() && correo.isNotEmpty()
     }
 
+    /**
+     * Realiza el registro del usuario si los campos son válidos.
+     *
+     * @param nombre El nombre del usuario.
+     * @param apellidoPaterno El apellido paterno del usuario.
+     * @param apellidoMaterno El apellido materno del usuario.
+     * @param correo El correo electrónico del usuario.
+     * @param password La contraseña del usuario.
+     * @param navController El controlador de navegación.
+     */
     fun registroValido(nombre: String, apellidoPaterno: String, apellidoMaterno: String, correo: String, password: String, navController: NavController) {
         viewModelScope.launch {
             try {
-                // valores predeterminados
-                val tipoUsuario = "usuario_n"  // Valor fijo
-                val estatus = "activo"           // Valor fijo
+                // Valores predeterminados para tipo de usuario y estatus
+                val tipoUsuario = "usuario_n"  // Valor fijo para indicar que el usuario es normal
+                val estatus = "activo"         // Valor fijo que indica que el usuario está activo
+
+                // Llama al servicio de registro
                 val response = controlador.register(nombre, apellidoPaterno, apellidoMaterno, correo, password, tipoUsuario, estatus)
+
                 if (response.isSuccessful) {
+                    // Registro exitoso
                     registerResponse.value = response.body()
                     Toast.makeText(navController.context, "Registro exitoso", Toast.LENGTH_SHORT).show()
                 } else {
-                    // obtener el código de estado y el cuerpo de la respuesta
-                    val errorBody = response.errorBody()?.string() // Captura el cuerpo del error
+                    // Captura el error si la respuesta no fue exitosa
+                    val errorBody = response.errorBody()?.string() // Obtiene el cuerpo del error
                     registerError.value = "Error en el registro: ${response.code()} - $errorBody"
                     Toast.makeText(navController.context, "Registro inválido", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
+                // Captura cualquier excepción que ocurra durante el registro
                 registerError.value = e.message
             }
         }

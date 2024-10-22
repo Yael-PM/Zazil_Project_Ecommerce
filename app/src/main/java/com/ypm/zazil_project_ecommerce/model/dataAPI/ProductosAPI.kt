@@ -1,5 +1,6 @@
 package com.ypm.zazil_project_ecommerce.model.dataAPI
 
+// Data class que representa un producto
 data class ProductosAPI(
     val id_producto: Int = 0,
     val nombre_producto: String = "",

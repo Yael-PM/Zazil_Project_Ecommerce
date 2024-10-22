@@ -9,6 +9,9 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 
+/**
+ * Servicio para realizar operaciones POST en la API
+ */
 interface ServicioPOSTAPI {
     /**
      * Manda una petición POST a la API para verificar que un usuario existe
@@ -40,6 +43,13 @@ interface ServicioPOSTAPI {
         @Body carrito: AddCarritoAPI
     ): Response<AddCarritoAPI>
 
+    /**
+     * Agrega una nueva pregunta.
+     * Esta función realiza una petición POST a la API para agregar una nueva pregunta. El cuerpo de la solicitud
+     * incluye un objeto de tipo `PreguntasAPI` que contiene los detalles de la pregunta a agregar.
+     * @param pregunta Un objeto de tipo `PreguntasAPI` que contiene la información de la pregunta que se va a agregar.
+     * @return Una respuesta de tipo `Response<PreguntasAPI>` que contiene los detalles de la pregunta recién creada o un código de estado de la operación.
+     */
     @POST("api/preguntas")
     suspend fun addPregunta(
         @Body pregunta: PreguntasAPI

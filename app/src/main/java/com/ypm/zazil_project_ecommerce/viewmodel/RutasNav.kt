@@ -1,5 +1,9 @@
 package com.ypm.zazil_project_ecommerce.viewmodel
 
+/**
+ * Objeto que define las rutas de navegación dentro de la aplicación.
+ * Cada ruta puede incluir parámetros dinámicos, como el ID del usuario o del producto.
+ */
 object RutasNav {
     const val HOME = "home/{id}"
     const val REGISTRO = "registrar"
@@ -10,7 +14,6 @@ object RutasNav {
     const val HISTORIAL = "historial/{id}"
     const val TIENDA = "tienda/{id}"
     const val PERFIL = "perfil/{id}" //Ruta para ir al perfil del usuario
-    const val PAGO = "pago/{id}"
     const val CARRITO = "carrito/{id}"
     const val DETALLES = "detalle/{id}" //Ruta para ir al detalle del producto
 }

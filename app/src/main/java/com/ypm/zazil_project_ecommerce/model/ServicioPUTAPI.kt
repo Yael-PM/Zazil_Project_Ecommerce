@@ -12,7 +12,6 @@ import retrofit2.http.Path
 /**
  * Manda una petición PUT a la API para actualizar ciertos datos
  **/
-
 interface ServicioPUTAPI {
 
     /**
